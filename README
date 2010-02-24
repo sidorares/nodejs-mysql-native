@@ -1,0 +1,22 @@
+Mysql client module for node.js
+
+example:
+
+var mysql = require('mysql');
+var dbconn = mysql.createClient(); // localhost:3306
+
+dbconn.auth("user", "pass", "db", function(serverstatus) {
+    sys.puts(serverstatus.server_version);
+    this.query("select * from test", functon (resultset) {
+         var data = {};
+         resultset.attachListener("fields", function(fields) {
+              data.fields = fields;
+         } );
+         resultset.attachListener("row", function(row)) {
+              data.rows.push(row);
+         });
+         resultset.attachListener("end", function() {
+              print_data(data);
+         });
+    });
+} );
