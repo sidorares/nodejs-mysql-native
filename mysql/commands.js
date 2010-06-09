@@ -1,8 +1,8 @@
 var sha1 = require('sha1').SHA1;
 var sys = require('sys');
-var writer = require('serializers').writer;
-var flags = require('constants').flags;
-var types = require('constants').types;
+var writer = require('./serializers').writer;
+var flags = require('./constants').flags;
+var types = require('./constants').types;
 
 function xor(s1, s2)
 {
@@ -122,7 +122,6 @@ function cmd(handlers)
         var next_state = this[this.state].apply(this, arguments);
         if (next_state)
         {
-            //sys.puts(this.state + "->" + next_state);
             this.state = next_state;
         }
         if (this.state == "done")
@@ -364,9 +363,22 @@ function close()
    );
 }
 
+function debug( text )
+{
+   return new cmd(
+       {
+          start: function()
+          {
+              sys.puts(text);
+              return 'done';
+          }
+      }
+   );
+}
 
 exports.auth = auth;
 exports.close = close;
 exports.query = query;
 exports.prepare = prepare;
 exports.execute = execute;
+exports.debug = debug;

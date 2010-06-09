@@ -1,10 +1,10 @@
 
-    var reader = require('serializers').reader;
-    var writer = require('serializers').writer;
-    var cmd = require('commands');
+    var reader = require('./serializers').reader;
+    var writer = require('./serializers').writer;
+    var cmd = require('./commands');
     var tcp = require('tcp');
     var sys = require('sys');
-    var queue = require('containers').queue;
+    var queue = require('./containers').queue;
 
     function packetLength(data)
     {
@@ -23,7 +23,7 @@
         connection.setEncoding("binary");
         connection.setTimeout(0);
 
-        return createClient(connection);
+        return new socketClient(connection);
     }
 
 function dump(d)
@@ -35,7 +35,8 @@ function dump(d)
    }
 }
 
-    createClient = exports.createClient = function(connection)
+ 
+    socketClient = function(connection)
     {
         var client = this;
         this.commands = new queue();
@@ -47,6 +48,11 @@ function dump(d)
         this.close = function()
         {
             return this.add(new cmd.close());
+        }
+
+        this.debug = function( text )
+        {
+            return this.add(new cmd.debug(text));
         }
 
         this.auth = function(dbname, user, password)
@@ -75,7 +81,7 @@ function dump(d)
         }
 
         this.write_packet = function(packet, pnum)
-        { 
+        {
             packet.addHeader(pnum);
             this.connection.write(packet.data);
         }

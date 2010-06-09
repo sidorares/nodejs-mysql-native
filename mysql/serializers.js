@@ -1,5 +1,5 @@
 var sys = require('sys');
-var constants = require('constants');
+var constants = require('./constants');
 
 function writer()
 {
