@@ -2,21 +2,44 @@ Mysql client module for node.js
 
 example:
 
-var mysql = require('mysql');
-var dbconn = mysql.createClient(); // localhost:3306
+var sys = require("sys");
+var db = require("mysql/client").createTCPClient(); // localhost:3306 by default
 
-dbconn.auth("user", "pass", "db", function(serverstatus) {
-    sys.puts(serverstatus.server_version);
-    this.query("select * from test", functon (resultset) {
-         var data = {};
-         resultset.attachListener("fields", function(fields) {
-              data.fields = fields;
-         } );
-         resultset.attachListener("row", function(row)) {
-              data.rows.push(row);
-         });
-         resultset.attachListener("end", function() {
-              print_data(data);
-         });
-    });
-} );
+db.auth("test", "testuser", "testpass");
+db.query("select 1,2,3,'4'")
+   // .addListener('field', function(f) { sys.puts(" field: " + sys.inspect(f)); } )
+   .addListener('row', function(r) { sys.puts("row received:  " + sys.inspect(r)); } );
+db.close();
+
+otput:
+row received:
+[
+ 1,
+ 2,
+ 3,
+ "4"
+]
+
+highlights:
+
+- commands are pipelined
+- types are converted mysql<->javascript according to field type
+- prepared statements are cached and auto-prepared (TODO)
+- row packet ( query ) and binary row packet ( execute ) result in the same events emitted (same event name + same data) (TODO)
+
+API:
+
+client = createClient(socket); // TCP/unix domain
+
+client.auth(user, pass, db);
+client.query(sql); // 'field', 'fields_eof', 'row', 'done' events
+client.prepre(sql); //
+client.execute(sql, parameters); // 'field', 'fields_eof', 'row', 'done' events
+client.close(); // pipelined, connection is closed as soon the command is executed
+client.terminate(); // close connection immediately, all commands in the queue are dropped
+
+TODO:
+ 
+- client pool manager - same api as for client, but commands will go to the client with minimal commands queue
+- auto-prepared statements
+- prepared statements parameters are not functional yet 
