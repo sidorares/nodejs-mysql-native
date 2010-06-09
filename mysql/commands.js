@@ -126,7 +126,7 @@ function cmd(handlers)
         }
         if (this.state == "done")
         {
-           ee.emit(this.state, this);
+           ee.emit('end', this);
            return true;
         }
         if (this.state == "error")
