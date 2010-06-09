@@ -39,7 +39,9 @@ client.close(); // pipelined, connection is closed as soon the command is execut
 client.terminate(); // close connection immediately, all commands in the queue are dropped
 
 TODO:
- 
+
+- sync with latest node
+- buffers 
 - client pool manager - same api as for client, but commands will go to the client with minimal commands queue
 - auto-prepared statements
 - prepared statements parameters are not functional yet 
