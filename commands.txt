@@ -1,0 +1,16 @@
+
+name	| 	parameters	|	events	|	events parameters
+<all>					end
+
+auth		user,pass,db		ok		severStatus object
+query		sql			field		field object
+					fields_eof
+					row		array of records
+prepare		sql			ok		preparedStatement object
+					parameter	field object
+					field		field object
+execute		sql|ps,parameters	row		array of records
+
+close
+
+debug		text			
