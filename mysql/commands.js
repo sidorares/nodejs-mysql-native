@@ -252,7 +252,7 @@ function prepare(sql)
            if (!this.connection.pscache)
                this.connection.pscache = {};
            this.connection.pscache[sql] = this.ps;
-           this.emit('prepared', this.ps);
+           this.emit('ok', this.ps);
            this.ps.fields = [];
            this.ps.parameters = [];
            if (this.ps.num_params > 0)
