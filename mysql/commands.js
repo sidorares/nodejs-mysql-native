@@ -397,8 +397,8 @@ function execute(sql, parameters)
             {
                 if (!null_bit_map[f])
                 {
-                    var type = this.ps.fields[f].type;
-                    row.push(r.unpackBinary(type));
+                    var field = this.ps.fields[f];
+                    row.push(r.unpackBinary(field.type, field.flags & constants.field_flags.UNSIGNED));
                 }
             }
             this.emit('row', row);
