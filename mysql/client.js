@@ -2,7 +2,7 @@
     var reader = require('./serializers').reader;
     var writer = require('./serializers').writer;
     var cmd = require('./commands');
-    var tcp = require('tcp');
+    var net = require('net');
     var sys = require('sys');
     var queue = require('./containers').queue;
 
@@ -18,7 +18,7 @@
     {
         var host = host ? host : "locahost";
         var port = port ? port : 3306;
-        var connection = tcp.createConnection(3306, "localhost");
+        var connection = net.createConnection(3306, "localhost");
         connection.pscache = {};
         connection.setEncoding("binary");
         connection.setTimeout(0);
@@ -83,7 +83,8 @@ function dump(d)
         this.write_packet = function(packet, pnum)
         {
             packet.addHeader(pnum);
-            this.connection.write(packet.data);
+            sys.puts("writing: " + sys.inspect(packet));
+            this.connection.write(packet.data, 'binary');
         }
 
         this.dispatch_packet = function(packet)
