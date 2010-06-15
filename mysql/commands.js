@@ -356,12 +356,17 @@ function execute(sql, parameters)
                }                          
            }
            this.write( packet ); 
+           return 'execute_ok';
+        },
+        execute_ok: function(r)
+        {
            return 'fields';
         },
         fields: function( r )
         {
             if (r.isEOFpacket())
             {
+                this.emit('fields_eof');
                 return 'binrow';
             }
             var f = r.field();
