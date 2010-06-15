@@ -83,7 +83,6 @@ function dump(d)
         this.write_packet = function(packet, pnum)
         {
             packet.addHeader(pnum);
-            sys.puts("writing: " + sys.inspect(packet));
             this.connection.write(packet.data, 'binary');
         }
 
