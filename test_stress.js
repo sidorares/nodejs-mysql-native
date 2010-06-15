@@ -17,8 +17,6 @@ for (var c=0; c < numclients; ++c)
     db.auth("test", "testuser", "testpass");
 }
 
-    sys.p(clients);
-
 var numcommands = process.argv[3];
 for (var i=0; i < numcommands; ++i)
 {
