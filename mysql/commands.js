@@ -1,5 +1,6 @@
 var sys = require('sys');
 var writer = require('./serializers').writer;
+var field_flags = require('./constants').field_flags;
 var flags = require('./constants').flags;
 var types = require('./constants').types;
 
@@ -398,7 +399,7 @@ function execute(sql, parameters)
                 if (!null_bit_map[f])
                 {
                     var field = this.ps.fields[f];
-                    row.push(r.unpackBinary(field.type, field.flags & constants.field_flags.UNSIGNED));
+                    row.push(r.unpackBinary(field.type, field.flags & field_flags.UNSIGNED));
                 }
             }
             this.emit('row', row);

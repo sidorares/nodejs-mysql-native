@@ -98,7 +98,7 @@ function reader(data)
 }
 
 // deserialise mysql binary field
-reader.prototype.unpackBinary = function(typei, unsigned)
+reader.prototype.unpackBinary = function(type, unsigned)
 {
     // debug dump
     //return "_not_implemented_ " + constants.type_names[type] + " " + sys.inspect(this.data);
