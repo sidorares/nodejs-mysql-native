@@ -1,4 +1,3 @@
-var sha1 = require('sha1').SHA1;
 var sys = require('sys');
 var writer = require('./serializers').writer;
 var flags = require('./constants').flags;
@@ -72,6 +71,15 @@ var mysql_type = function(js_type)
 {
 }
 
+
+var crypto = require('crypto');
+function sha1(msg)
+{
+    var hash = crypto.createHash('sha1');
+    hash.update(msg);
+    return hash.digest('binary');
+}
+
 //
 // mysql 4.2+ authorisation protocol
 // token = sha1(salt + sha1(sha1(password))) xor sha1(password)
@@ -134,9 +142,9 @@ function cmd(handlers)
         return false;
     }
 
-    this.write = function(packet)
+    this.write = function(packet, pnum)
     {
-        this.connection.write_packet(packet);    
+        this.connection.write_packet(packet,pnum);    
     }
 } 
 
@@ -169,13 +177,13 @@ function auth(db, user, password)
             reply.zstring(user);
             reply.lcstring(token);
             reply.zstring(db);
-            this.connection.write_packet(reply, 1);
+            this.write(reply, 1);
             return 'check_auth_ok';
         },
         check_auth_ok: function( r ) 
         {
             var ok = r.readOKpacket();
-            this.emit('connected', c.serverStatus);
+            this.emit('authorized', c.serverStatus);
             return 'done'; 
         }        
     });
