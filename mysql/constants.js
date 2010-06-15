@@ -20,6 +20,18 @@ var flags = exports.flags =
   CLIENT_MULTI_RESULTS:    131072  /* Enable/disable multi-results */
 }
 
+exports.field_flags = 
+{
+    NOT_NULL:   1,               /* Field can't be NULL */
+    PRI_KEY:    2,               /* Field is part of a primary key */
+    UNIQUE_KEY: 4,               /* Field is part of a unique key */
+    MULTIPLE_KEY: 8,             /* Field is part of a key */
+    BLOB:       16,              /* Field is a blob */
+    UNSIGNED:   32,              /* Field is unsigned */
+    ZEROFILL:   64,              /* Field is zerofill */
+    BINARY:     128, 
+}
+
 exports.flags.CLIENT_BASIC_FLAGS = flags.CLIENT_LONG_PASSWORD | 
                        flags.CLIENT_FOUND_ROWS | 
                        flags.CLIENT_LONG_FLAG | 
@@ -56,7 +68,7 @@ exports.types =
   MYSQL_TYPE_NEWDATE: 14,
   MYSQL_TYPE_VARCHAR: 15,
   MYSQL_TYPE_BIT: 16,
-  MYSQL_TYPE_NEWDECIMA: 246,
+  MYSQL_TYPE_NEWDECIMAL: 246,
   MYSQL_TYPE_ENUM: 247,
   MYSQL_TYPE_SET: 248,
   MYSQL_TYPE_TINY_BLOB: 249,
