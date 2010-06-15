@@ -71,6 +71,12 @@ writer.prototype.add = function(s)
    return this;
 }
 
+writer.prototype.int2 = function(s)
+{
+    this.data += String.fromCharCode( s & 0xff );
+    this.data += String.fromCharCode( (s >> 8)  & 0xff );
+}
+
 writer.prototype.addHeader = function(n)
 {
     var length = this.data.length;
@@ -89,6 +95,34 @@ function reader(data)
    this.data = data;
    this.pos = 0;
 
+}
+
+// deserialise mysql binary field
+reader.prototype.unpackBinary = function(type)
+{
+    
+    return "_not_implemented_ " + constants.type_names[type] + " " + sys.inspect(this.data);
+    var result;
+    switch (type)
+    {
+    case constants.types.MYSQL_TYPE_STRING:
+    case constants.types.MYSQL_TYPE_VAR_STRING:
+    case constants.types.MYSQL_TYPE_BLOB:
+        result = this.lcstring();
+        break;
+    case constants.types.MYSQL_TYPE_LONG:
+        result = this.num(4);
+        break;
+    case constants.types.MYSQL_TYPE_LONGLONG:
+        result = this.num(8);
+        break;
+    case constants.types.MYSQL_TYPE_NEWDECIMAL:
+        result = parseFloat(this.lcstring());
+        break;
+    default:
+        result = "_not_implemented_ " + constants.type_names[type] + " " + sys.inspect(this.data); //todo: throw exception here
+    }
+    return result;
 }
 
 // read n-bytes number 
@@ -122,22 +156,24 @@ reader.prototype.field = function()
    field.decimals = this.num(1);
    field.filler = this.num(2);
    field.defval = this.lcstring();
-   // sys.puts("field: " + sys.inspect(field));
-   //sys.puts("type:" + constants.type_names[field.type]);
    return field;
 }
 
-/*
-reader.prototype.parameter = function()
+function binary(n)
 {
-    var parameter = {};
-    parameter.type = this.num(2);
-    parameter.flags = this.num(2);
-    parameter.decimals = this.num(1);
-    parameter.length = this.num(2);
-    return parameter;
+    var res = "";
+    var nbits = 0;
+    while(n != 0)
+    {
+        var bit = n - Math.floor(n/2)*2;
+        res = bit + res;
+        n = Math.floor(n/2);
+        nbits++;
+    }
+    for(; nbits <= 8; ++nbits)
+         res = "0" + res;    
+    return res;
 }
-*/
 
 reader.prototype.zstring = function()
 {
