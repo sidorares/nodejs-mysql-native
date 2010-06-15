@@ -70,14 +70,14 @@ function dump(d)
             return this.add(new cmd.prepare(q));
         }
 
-        this.execute = function(q)
+        this.execute = function(q, parameters)
         {
-            return this.add(new cmd.execute(q));
+            return this.add(new cmd.execute(q, parameters));
         }
 
         this.terminate = function()
         {
-            this.connection.close();
+            this.connection.end();
         }
 
         this.write_packet = function(packet, pnum)

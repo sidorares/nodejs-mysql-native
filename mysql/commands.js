@@ -60,12 +60,22 @@ var type_parsers = {};
   type_parsers[types.MYSQL_TYPE_STRING] = parseString;
   //MYSQL_TYPE_GEOMETRY: 255G
 
+/*
+var type_seriliaers = {};
+type_serialisers['string'] = serialiseString;
+
+function serialiseString(a)
+{
+    var w = new writer();
+    w.lcstring(s);
+    return w.data;
+}
+*/
+
 var string2type = function(str, t)
 {
     return type_parsers[t](str);
 }
-
-
 
 var mysql_type = function(js_type)
 {
@@ -206,7 +216,6 @@ function query(sql)
             var ok = r.readOKpacket();
             if (ok.field_count == 0)
                 return 'done';
-            //sys.puts("rs_ok: " + sys.inspect(ok));
             this.fields = [];
             return 'handle_fields';
         },
@@ -246,7 +255,6 @@ function prepare(sql)
         start: function()
         {
            this.write( new writer().add("\u0016").add(sql) );
-           sys.puts( "psok sent" );
            return 'ps_ok';
         },
         ps_ok: function( r )
@@ -296,6 +304,7 @@ function prepare(sql)
     );
 }
 
+
 function execute(sql, parameters)
 {
     var ps;
@@ -311,30 +320,40 @@ function execute(sql, parameters)
                this.emit('error', error);
                return 'done';
            }
-           sys.p(this.ps);
            var packet = new writer().add("\u0017").add(this.ps.statement_handler_id).add("\u0000\u0001\u0000\u0000\u0000");
            if ( parameters )
            {
                var null_bit_map = "";
                var mask = 1;        
-               var bit_map = 0;        
-               for (var p=0; p < parameters.lengt; ++p)
+               var bit_map = 0; 
+               for (var p=0; p < parameters.length; ++p)
                {
                    if (parameters[p] == null)
                        bit_map += mask;
                    mask = mask*2;
                    if (mask == 256)
                    {
-                       null_bit_map.push(String.fromCharCode(bit_map));
+                       null_bit_map += String.fromCharCode(bit_map);
                        mask = 1;
                        bit_map = 0;
                    }
                }
+               null_bit_map += String.fromCharCode(bit_map);
+
                packet.add(null_bit_map);
-               packet.add(1);
-               var types = "";
-               
-                         
+               // todo: set types only on first call
+               packet.add('\u0001');
+               // todo: add numeric/datetime serialisers
+               for (var p in parameters)
+               {
+                   if (parameters[p] != null)
+                       packet.int2(types.MYSQL_TYPE_VAR_STRING);
+               }
+               for (var p in parameters)
+               {
+                  if (parameters[p] != null)
+                       packet.lcstring(parameters[p].toString());
+               }                          
            }
            this.write( packet ); 
            return 'fields';
@@ -352,7 +371,32 @@ function execute(sql, parameters)
         {
             if (r.isEOFpacket())
                return 'done';
-            this.emit('binrow', r);
+
+            var null_bit_map = [];
+            r.num(1); // first octet always 0
+            var bit = 4;
+            var bitmap_byte;
+            if (this.ps.field_count > 0)
+                bitmap_byte = r.num(1);
+            for (var f=0; f < this.ps.field_count; ++f)
+            {
+                null_bit_map.push( (bitmap_byte & bit) != 0);
+                if (!((bit<<=1) & 255))
+                {
+                    bit= 1;
+                    bitmap_byte = r.num(1);
+                }    
+            }
+            var row = [];
+            for (var f=0; f < this.ps.field_count; ++f)
+            {
+                if (!null_bit_map[f])
+                {
+                    var type = this.ps.fields[f].type;
+                    row.push(r.unpackBinary(type));
+                }
+            }
+            this.emit('row', row);
         }
 
     });
