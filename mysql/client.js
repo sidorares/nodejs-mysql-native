@@ -122,7 +122,9 @@ function dump(d)
             if (need_start_queue)
                 this.dispatch_packet();
 
-            c.addListener('error', function(e) { sys.puts(e.message); }); 
+            var connection = this.connection;
+            c.addListener('end', function(cmd) { connection.emit('command_end', c); });
+            c.addListener('error', function(e) { sys.puts(e.message); });  // TODO: throw exception
             return c;
         } 
 
