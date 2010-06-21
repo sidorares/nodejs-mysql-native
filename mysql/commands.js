@@ -275,6 +275,7 @@ function prepare(sql)
            this.ps.field_count = r.num(2);
            this.ps.num_params = r.num(2);
            r.bytes(1); // filler, should be 0
+           
            if (!this.connection.pscache)
                this.connection.pscache = {};
            this.connection.pscache[sql] = this.ps;
@@ -322,7 +323,7 @@ function execute(sql, parameters)
     {
         start: function()
         {
-           if (this.connection.pscache)
+           if (!this.ps && this.connection.pscache)
                this.ps = this.connection.pscache[sql];
            if (!this.ps)
            {

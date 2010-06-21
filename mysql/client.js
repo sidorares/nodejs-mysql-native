@@ -70,8 +70,25 @@ function dump(d)
             return this.add(new cmd.prepare(q));
         }
 
+        // TODO: too many copy-paste, cleanup
         this.execute = function(q, parameters)
         {
+            if (!this.pscache)
+                this.pscache = {};
+            if (this.auto_prepare == true)
+            {
+                var cached = this.connection.pscache[q];
+                if (!cached) {
+                    var prepare_cmd = this.add(new cmd.prepare(q));
+                    var execute_cmd = this.add(new cmd.execute(q, parameters));
+                    prepare_cmd.addListener('prepared', function(ps) { execute_cmd.ps = ps; });
+                    return execute_cmd;
+                } else {
+                    var execute_cmd = this.add(new cmd.execute(q, parameters));
+                    execute_cmd.ps = cached;
+                    return execute_cmd;
+                }
+            }            
             return this.add(new cmd.execute(q, parameters));
         }
 
