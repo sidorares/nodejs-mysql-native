@@ -1,3 +1,5 @@
+#!/usr/local/bin/node
+
 var sys = require("sys");
 var db = require("mysql/client").createTCPClient(); // localhost:3306 by default
 db.auto_prepare = true;
