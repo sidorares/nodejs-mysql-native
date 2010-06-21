@@ -1,7 +1,10 @@
+var sys = require('sys');
+
 function deque()
 {
     this.begin = null;
     this.end = null;
+    this.length = 0;
 }
 
 deque.prototype.push = function(data)
@@ -24,16 +27,17 @@ deque.prototype.top = function()
 {
     if (this.begin)
         return this.begin.data;
+    sys.p("queue empty");
 }
 
 deque.prototype.empty = function()
 {
     return this.length == 0;
-    //return this.begin == null;
 }
 
 deque.prototype.shift = function()
 {
+    --this.length;
     if (this.begin == this.end)
     {
         this.begin = this.end = null;
@@ -41,7 +45,6 @@ deque.prototype.shift = function()
     }
     var res = this.begin.data;
     this.begin = this.begin.next;
-    --length;
     return res;
 }
 
