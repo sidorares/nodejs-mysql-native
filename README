@@ -58,6 +58,7 @@ Events:
 - client.prepre(sql) - prepare a statement and store result in client.pscache
 Events:
     'prepared'(preparedStatement)
+    'parameter'(field) - input parameter description
 
 - execute(sql, parameters) - parameters is an array of values. Known types are sent in appropriate mysql binary type (TODO: currently this is not true, type is always string and input converted using param.toString() )
 Events:
@@ -67,4 +68,4 @@ Events:
 TODO:
 
 - buffers 
-- client pool manager - same api as for client, but commands will go to the client with minimal commands queue
+- queue-size balanced connections pool
