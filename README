@@ -1,47 +1,70 @@
 Mysql client module for node.js
 
-example:
+simple example:
 
-var sys = require("sys");
 var db = require("mysql/client").createTCPClient(); // localhost:3306 by default
+db.auto_prepare = true;
+function dump_rows(cmd)
+{
+   cmd.addListener('row', function(r) { sys.puts("row: " + sys.inspect(r)); } );
+}
 
 db.auth("test", "testuser", "testpass");
-db.query("select 1,2,3,'4'")
-   // .addListener('field', function(f) { sys.puts(" field: " + sys.inspect(f)); } )
-   .addListener('row', function(r) { sys.puts("row received:  " + sys.inspect(r)); } );
+dump_rows(db.query("select 1+1,2,3,'4',length('hello')"));
+dump_rows(db.execute("select 1+1,2,3,'4',length(?)", ["hello"]));
 db.close();
 
-otput:
-row received:
-[
- 1,
- 2,
- 3,
- "4"
-]
+otput is:
+row: [ 1, 2, 3, "4", null, 5]
+row: [ 1, 2, 3, "4", null, 5]
 
 highlights:
 
 - commands are pipelined
 - types are converted mysql<->javascript according to field type
-- prepared statements are cached and auto-prepared (TODO)
-- row packet ( query ) and binary row packet ( execute ) result in the same events emitted (same event name + same data) (TODO)
+- prepared statements are cached and auto-prepared
+- row packet ( query ) and binary row packet ( execute ) handled transparently equal
 
-API:
 
-client = createClient(socket); // TCP/unix domain
+== API:
 
-client.auth(user, pass, db);
-client.query(sql); // 'field', 'fields_eof', 'row', 'done' events
-client.prepre(sql); //
-client.execute(sql, parameters); // 'field', 'fields_eof', 'row', 'done' events
-client.close(); // pipelined, connection is closed as soon the command is executed
-client.terminate(); // close connection immediately, all commands in the queue are dropped
+mysql/client:
+
+createClient(socket) -  create client from duplex stream (TODO: add default path to local server socket)
+createTCPClient(host, port) - create tcp client, default host 127.0.0.1, port 3306
+
+client.auth
+client.query
+client.prepare
+client.execute
+client.close - create and enqueue corresponding command
+client.execute also adds prepare command if there is no cached statement and client.auto_prepare set to true (TODO: add better api than client.auto_prepare flag)
+
+client.terminate - close conection immediately
+
+=== commands:
+All commands fire 'done'() event at the end of command executing.
+
+- auth(user, pass, db) - perform mysql connection handshake. Should be always a first command (TODO: add default user/pass if missing?).
+Events:
+    'authirized'(serverStatus) event. 
+
+- query(sql) - sumple query.
+Events:
+    'field'(field) - one for each field description
+    'fields_eof'() - after last field
+    'row'(rows) - array of field values, fired for each row in result set
+
+- client.prepre(sql) - prepare a statement and store result in client.pscache
+Events:
+    'prepared'(preparedStatement)
+
+- execute(sql, parameters) - parameters is an array of values. Known types are sent in appropriate mysql binary type (TODO: currently this is not true, type is always string and input converted using param.toString() )
+Events:
+   same as with query()
+ 
 
 TODO:
 
-- sync with latest node
 - buffers 
 - client pool manager - same api as for client, but commands will go to the client with minimal commands queue
-- auto-prepared statements
-- prepared statements parameters are not functional yet 
