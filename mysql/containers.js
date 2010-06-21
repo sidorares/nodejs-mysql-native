@@ -17,6 +17,7 @@ deque.prototype.push = function(data)
         this.end.prev = end;
         end.next = this.end;
     }
+    ++this.length;
 }
 
 deque.prototype.top = function()
@@ -27,7 +28,8 @@ deque.prototype.top = function()
 
 deque.prototype.empty = function()
 {
-    return this.begin == null;
+    return this.length == 0;
+    //return this.begin == null;
 }
 
 deque.prototype.shift = function()
@@ -39,6 +41,7 @@ deque.prototype.shift = function()
     }
     var res = this.begin.data;
     this.begin = this.begin.next;
+    --length;
     return res;
 }
 
