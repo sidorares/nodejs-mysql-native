@@ -157,6 +157,14 @@ function cmd(handlers)
     {
         this.connection.write_packet(packet,pnum);    
     }
+
+    this.store_column = function(r,f,v)
+    {
+        if (this.connection.row_as_hash)
+            r[f.name] = v;
+        else
+            r.push(v);
+    }
 } 
 
 function auth(db, user, password)
@@ -235,13 +243,14 @@ function query(sql)
         {
             if (r.isEOFpacket())
                 return 'done';
-            var row = [];
+
+            var row = this.connection.row_as_hash ? {} : [];
             var field_index = 0;
             while (!r.eof())
             {
                 var field = this.fields[field_index];
-                var value = r.lcstring();
-                row.push(string2type(value, field.type));
+                var value = string2type(r.lcstring(), field.type); // todo: move to serialiser unpackString
+                this.store_column(row, field, value)
                 field_index++;
             }
             this.emit('row', row, this.fields);
@@ -393,13 +402,16 @@ function execute(sql, parameters)
                     bitmap_byte = r.num(1);
                 }    
             }
-            var row = [];
+            var row = this.connection.row_as_hash ? {} : [];
             for (var f=0; f < this.ps.field_count; ++f)
             {
+                var field = this.ps.fields[f];
                 if (!null_bit_map[f])
                 {
-                    var field = this.ps.fields[f];
-                    row.push(r.unpackBinary(field.type, field.flags & field_flags.UNSIGNED));
+                    var value = r.unpackBinary(field.type, field.flags & field_flags.UNSIGNED);
+                    this.store_column(row, field, value);
+                } else {
+                    this.store_column(row, field, null);
                 }
             }
             this.emit('row', row);
