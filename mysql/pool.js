@@ -1,13 +1,15 @@
 var queue = require('./containers').queue;
 var sys= require('sys');
 
-function pool(newConnectionFactory)
+function pool(newConnectionFactory, minConnections)
 {
    this.newConnectionFactory = newConnectionFactory;
-   this.connections = [];
 
    // some reasonable defaults
-   this.minConnections = 0; // lazy by default 
+   if (minConnections)
+       this.minConnections = minConnections; // lazy by default 
+   else
+       this.minConnections = 0;
    this.maxConnections = 16;
    this.maxQueue = 2; // increase if average command time is much shorter compared to connect time
                       // TODO: calculate ratio on the fly? think of adaptiveMaxQueue
@@ -15,7 +17,8 @@ function pool(newConnectionFactory)
    this.maxWaiters = 100000000; // TODO: infinity?
 
    this.waiters = new queue();
-   for (var i=0; i < this.minConnections; ++i)
+   this.connections = new queue();
+   for (var i=0; i <= this.minConnections; ++i)
       this.spawnConnection();
 }
 
@@ -25,24 +28,27 @@ pool.prototype.spawnConnection = function()
     var self = this;
     // todo: Qt-style connection-slot api?
     client.connection.addListener('command_end', function() { self.queueChanged(client); });
-    this.connections.push(client);
+    var node = this.connections.push(client);
+    client.pool_node = node;
     return client;
 }
 
 pool.prototype.queueChanged = function(client)
 {
     var new_size = client.commands.length;
-
-    sys.puts("New queue:" + new_size);
+    // if (new_size == 1)
+    //    sys.p(client.commands.begin.data);
+    // sys.puts("New queue:" + new_size);
 
     if (!this.waiters.empty() && new_size <= this.maxQueue)
     {
         var w = this.waiters.shift();
+        sys.puts("free connection released to waiter" );
         if (w)
             w(client);
     }
 
-    // there is no commands left for current connection
+    // there is no c:0ommands left for current connection
     // close it after idleTimeout
     if (new_size == 0 && this.connections.length > this.minConnections)
     {
@@ -59,6 +65,7 @@ pool.prototype.queueChanged = function(client)
 
 pool.prototype.get = function(onClientReady)
 {
+    sys.puts("=== pool::get === ");
     // select client with minimal queue
     // if its queue length <= maxQueue, return it
     // if connections size less than maxConnection, spawn a new connection
@@ -70,35 +77,43 @@ pool.prototype.get = function(onClientReady)
     // TODO: add search using index
     var minQueueConnection = null;
     var minQueue = 1000000000;
-    for (var i=0; i < this.connections.length; ++i)
+    for (var i = this.connections.begin; i != this.connections.end; i = i.next)
     {
-        var len = this.connections[i].commands.length;
+        var cli = i.data;
+        var len = cli.commands.length;
+        sys.puts("client q:" + len);
         if (len < minQueue)
         {
             minQueue = len;
-            minQueueConnection = this.connections[i];
+            minQueueConnection = cli;
         }
     }
-    if (minQueue < this.maxQueue)
+    sys.puts("min pool queue is " + minQueue);
+    if (minQueue <= this.maxQueue)
     {
-        onClientReady(minQueueConnection);
+        sys.puts("using existing connection");
+        return onClientReady(minQueueConnection);
     }
     if (this.connections.length < this.maxConnections)
     {
-        onClientReady(this.spawnConnection());
+        sys.puts("sapwning new connection");
+        return onClientReady(this.spawnConnection());
     }
     if (this.waiters.length < this.maxWaiters)
     {
+        sys.puts("waiting for awailable connection");
         this.waiters.push(onClientReady);
+        return;
     }
 }
-
+/*
 pool.prototype.close = function()
 {
-    for (var i=0; i < this.connections.length; ++i)
+    for (var i = this.connections.begin; i != this.connections.end; i = i.next)
     {
-        this.connections[i].close();
+        i.data.close();
     }
 }
+*/
 
 exports.pool = pool;
