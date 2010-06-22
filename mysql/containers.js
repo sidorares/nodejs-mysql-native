@@ -1,3 +1,6 @@
+// doubly-linked list for constant time shift
+// each node have prev,next,data properties
+
 var sys = require('sys');
 
 function deque()
@@ -9,7 +12,7 @@ function deque()
 
 deque.prototype.push = function(data)
 {
-    if (!this.begin)
+    if (!this.begin) // insert into empty list
     {
         this.begin = this.end = { 'data': data };
         this.begin.next = this.begin; 
@@ -21,13 +24,13 @@ deque.prototype.push = function(data)
         end.next = this.end;
     }
     ++this.length;
+    return this;
 }
 
 deque.prototype.top = function()
 {
     if (this.begin)
         return this.begin.data;
-    sys.p("queue empty");
 }
 
 deque.prototype.empty = function()
