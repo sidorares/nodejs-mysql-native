@@ -63,15 +63,27 @@ Events:
 - execute(sql, parameters) - parameters is an array of values. Known types are sent in appropriate mysql binary type (TODO: currently this is not true, type is always string and input converted using param.toString() )
 Events:
    same as with query()
- 
+
+=== connection pool
+
+pool(createNewConnectionCallback, minConnections) - create a new pool, spawn minConnections at start using createNewConnectionCallback. One should usually call auth command on a new connection before returning it. 
+pool.get( connectionAvailableCallback ) - calls connectionAvailableCallback when there is connection with queue length < pool.maxQueue.
+
+parameters:
+   pool.minConnections
+   pool.maxConnections
+   pool.maxQueue
+   pool.maxWaiters 
 
 TODO:
 
 - buffers 
-- queue-size balanced connections pool
 
-LINKS
+LINKS:
 
-Mysql protocol documentation: http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
-Other node.js clients: http://github.com/masuidrive/node-mysql
-                       http://github.com/Sannis/node-mysql-libmysqlclient
+Mysql protocol documentation: 
+    http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
+Other node.js mysql clients: 
+    http://github.com/masuidrive/node-mysql
+    http://github.com/Sannis/node-mysql-libmysqlclient
+    http://github.com/Guille/node.dbslayer.js/ 
