@@ -223,7 +223,7 @@ reader.prototype.readOKpacket = function()
    if (res.field_count == 0xff) // error
    {
        res.errno = this.data.charCodeAt(this.pos) + (this.data.charCodeAt(this.pos+1)<<8);
-       this.pos += 2;
+       this.pos += 8;
        //this.pos++; // skip sqlstate marker, "#"
        //res.sqlstate = this.bytes(5);
    } else {
