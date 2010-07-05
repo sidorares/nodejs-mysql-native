@@ -137,7 +137,7 @@ function cmd(handlers)
             ee.emit('error', error);
             return true;
         }
-
+ 
         var next_state = this[this.state].apply(this, arguments);
         if (next_state)
         {
@@ -169,6 +169,11 @@ function cmd(handlers)
 
 function auth(db, user, password)
 {
+    if (!user)
+        user='';
+    if (!password)
+        password='';
+
     var c = new cmd( 
     {
         start: function() { return 'read_status'; },
@@ -213,18 +218,20 @@ function auth(db, user, password)
 
 function query(sql)
 {
-    return new cmd(
+    var c = new cmd(
     {
         start: function()
         {
-            this.write( new writer().add("\u0003").add(sql) );
+            this.write( new writer().add("\u0003").add(this.sql) );
             return 'rs_ok';
         },
         rs_ok: function( r )
         {
             var ok = r.readOKpacket();
             if (ok.field_count == 0)
+            { 
                 return 'done';
+            }
             this.fields = [];
             return 'handle_fields';
         },
@@ -242,7 +249,9 @@ function query(sql)
         data: function( r )
         {
             if (r.isEOFpacket())
+            {
                 return 'done';
+            }
 
             var row = this.connection.row_as_hash ? {} : [];
             var field_index = 0;
@@ -256,6 +265,8 @@ function query(sql)
             this.emit('row', row, this.fields);
         }
     });
+    c.sql = sql;
+    return c;
 }
 
 function prepare(sql)
@@ -264,6 +275,8 @@ function prepare(sql)
     {
         start: function()
         {
+           //if (this.connection.pscache[sql])
+           //    return 'done';
            this.write( new writer().add("\u0016").add(sql) );
            return 'ps_ok';
         },
@@ -323,6 +336,9 @@ function execute(sql, parameters)
     {
         start: function()
         {
+           if (this.prepare_failed)
+               return 'done';
+
            if (!this.ps && this.connection.pscache)
                this.ps = this.connection.pscache[sql];
            if (!this.ps)
@@ -371,6 +387,9 @@ function execute(sql, parameters)
         },
         execute_ok: function(r)
         {
+           var ok = r.readOKpacket();
+           if (this.ps.field_count == 0)
+               return 'done';
            return 'fields';
         },
         fields: function( r )

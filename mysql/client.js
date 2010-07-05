@@ -82,6 +82,11 @@ function dump(d)
                     var prepare_cmd = this.add(new cmd.prepare(q));
                     var execute_cmd = this.add(new cmd.execute(q, parameters));
                     prepare_cmd.addListener('prepared', function(ps) { execute_cmd.ps = ps; });
+                    prepare_cmd.addListener('error', function(err)
+                    {
+                        execute_cmd.emit('error', err);
+                        execute_cmd.prepare_failed = true; 
+                    });
                     return execute_cmd;
                 } else {
                     var execute_cmd = this.add(new cmd.execute(q, parameters));
@@ -110,8 +115,15 @@ function dump(d)
             if (this.commands.top().process_packet(packet))
             {
                 this.commands.shift();
+                this.connection.emit('queue', this.commands.length);
                 this.dispatch_packet();
             }
+        }
+
+        // proxy request to socket eventemitter
+        this.addListener = function()
+        {
+            this.connection.addListener.apply(this.connection, arguments);
         }
 
         this.add = function(c)
@@ -119,12 +131,13 @@ function dump(d)
             c.connection = this;
             var need_start_queue = this.connection.connected && this.commands.empty();
             this.commands.push(c);
+            this.connection.emit('queue', this.commands.length); 
             if (need_start_queue)
                 this.dispatch_packet();
 
             var connection = this.connection;
-            c.addListener('end', function(cmd) { connection.emit('command_end', c); });
-            c.addListener('error', function(e) { sys.puts(e.message); });  // TODO: throw exception
+            //c.addListener('end', function(cmd) { connection.emit('command_end', c); });
+            //c.addListener('error', function(e) { sys.puts(e.message); });  // TODO: throw exception
             return c;
         } 
 
