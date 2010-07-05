@@ -6,6 +6,8 @@ var url = require("url");
 var client = require("mysql/client");
 var pool = require("mysql/pool").pool;
 
+process.addListener('uncaughtException', function(err) { sys.p(err); });
+
 function test_datasource()
 {
    var db = client.createTCPClient(); 
@@ -17,21 +19,6 @@ function test_datasource()
 var dbpool = new pool(test_datasource, 16);
 dbpool.max_connections = 32;
 
-function start_html(res)
-{
-    res.write("<html><body><table>\n<tr>");
-}
-
-function dump_field(f, res)
-{
-    res.write("<td>" + f.name + "</td>");
-}
-
-function close_header(res)
-{
-    res.write("</tr>\n");
-}
-
 function dump_row(row, res)
 {
     res.write("<tr>");
@@ -40,12 +27,6 @@ function dump_row(row, res)
         res.write("<td>" + row[i] + "</td>"); 
     }
     res.write("</tr>\n");
-}
-
-function close_html(res)
-{
-    res.write("</table></body></html>");
-    res.end();
 }
 
 http.createServer(function (req, res) {
@@ -61,14 +42,14 @@ http.createServer(function (req, res) {
   dbpool.get(
       function(conn) 
       {
+
           res.writeHead(200, {'Content-Type': 'text/html'});
-          start_html(res);
+          res.write("<html><body><table>\n<tr>");
           conn.query(q)
-              .addListener('field', function(f) { dump_field(f, res); }) 
-              .addListener('fields_eof', function() { close_header(res); }) 
+              .addListener('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
+              .addListener('fields_eof', function() { res.write("</tr>\n"); }) 
               .addListener('row', function(r) { dump_row(r, res); }) 
-              .addListener('end', function() { close_html(res); });
+              .addListener('end', function() { res.write("</table></body></html>"); res.end(); });
       }
   ); 
 }).listen(8080, "127.0.0.1");
-
