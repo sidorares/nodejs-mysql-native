@@ -35,11 +35,11 @@ transaction.prototype.executeSql = function (query, args, rsCallback, errorCallb
     tx.last_exec_cmd = execCmd;
 }
 
-exports.openDatabase = function(db)
+exports.openDatabase = function(db, user, password)
 {
     var webdb = {};
     var connection = createTCPClient();
-    connection.auth('test', 'testuser', 'testpass');
+    connection.auth(db, user, password);
     connection.query('SET autocommit=0;');
     connection.auto_prepare = true;
     webdb.transaction = function(txCreated, txError)
