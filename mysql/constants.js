@@ -84,6 +84,9 @@ exports.type_names = {};
 
 for (var tname in exports.types)
 {
-   var type = exports.types[tname];
-   exports.type_names[type] = tname;
+   if(exports.types.hasOwnProperty(tname) )
+   {
+       var type = exports.types[tname];
+       exports.type_names[type] = tname;
+   }
 }

@@ -55,5 +55,6 @@ exports.openDatabase = function(db, user, password)
             commit.sql = t.clean ? "COMMIT" : "ROLLBACK"
        });
     }
+    webdb.close = function() { connection.close(); };
     return webdb;
 }

@@ -115,7 +115,10 @@ function cmd(handlers)
     // mixin all handlers  
     for (h in handlers)
     {
-        this[h] = handlers[h];
+        if(handlers.hasOwnProperty(h)) 
+        {
+            this[h] = handlers[h];
+        }
     }    
 
     // delegate to private EventEmitter member
@@ -371,15 +374,15 @@ function execute(sql, parameters)
                // todo: set types only on first call
                packet.add('\u0001');
                // todo: add numeric/datetime serialisers
-               for (var p in parameters)
+               for (var i = 0; i < parameters.length; i++)
                {
-                   if (parameters[p] != null)
+                   if (parameters[i] != null)
                        packet.int2(types.MYSQL_TYPE_VAR_STRING);
                }
-               for (var p in parameters)
+               for (var i = 0; i < parameters.length; i++)
                {
-                  if (parameters[p] != null)
-                       packet.lcstring(parameters[p].toString());
+                   if (parameters[i] != null)
+                       packet.lcstring(parameters[i].toString());
                }                          
            }
            this.write( packet ); 
