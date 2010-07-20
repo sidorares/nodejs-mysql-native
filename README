@@ -43,7 +43,7 @@ client.execute also adds prepare command if there is no cached statement and cli
 client.terminate - close conection immediately
 
 === commands:
-All commands fire 'done'() event at the end of command executing.
+All commands fire 'end'() event at the end of command executing.
 
 - auth(user, pass, db) - perform mysql connection handshake. Should be always a first command (TODO: add default user/pass if missing?).
 Events:
