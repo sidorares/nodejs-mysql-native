@@ -126,7 +126,7 @@ function cmd(handlers)
     {
        ee.emit.apply(ee, arguments);
     }
-    this.addListener = function()
+    this.on = this.addListener = function()
     {
        ee.addListener.apply(ee, arguments);
        return this;
