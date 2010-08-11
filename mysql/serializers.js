@@ -97,6 +97,80 @@ function reader(data)
 
 }
 
+// libmysql sets all fields to zero when binary packet has zero length
+function zeroTime()
+{
+   // todo: check how zero date is serialized to output in mysql
+   return new Date(); 
+}
+
+reader.prototype.unpackBinaryTime = function()
+{
+    var length = this.lcnum();
+    if (length == 0)
+       return zeroTime();
+    var sign = this.num(1);
+    var day = this.num(4);
+    var hour = this.num(1);
+    var minutes = this.num(1);
+    var seconds = this.num(1);
+    var millisec = (length > 8) ? this.num(4) : 0;
+    if (day != 0)
+        hour += day*24;
+    var millisec_time_val = millisec + seconds*1000 + minutes*60000 + hour*3600000;
+    if (sign != 0)
+        millisec_time_val *= -1;
+    return millisec_time_val;
+}
+
+reader.prototype.unpackBinaryDateTime = function()
+{
+    var length = this.lcnum();
+    if (length == 0)
+       return zeroTime();
+
+    var y = this.num(2);
+    var m = this.num(1);
+    var d = this.num(1);
+
+    var hour = 0;
+    var min = 0;
+    var sec = 0;
+    if (length > 4)
+    {
+       hour = this.num(1);
+       min = this.num(1);
+       sec = this.num(1);
+    }
+    var millisec = (length > 8) ? this.num(4) : 0;
+    var dt = new Date();
+    dt.setYear(y);
+    dt.setMonth(m); 
+    dt.setDate(d);
+    dt.setHours(hour);
+    dt.setMinutes(min);
+    dt.setSeconds(sec);
+    dt.setMilliseconds(millisec);
+    return dt;
+}
+
+reader.prototype.unpackBinaryDate = function()
+{
+    var length = this.lcnum();
+    if (length == 0)
+       return zeroTime();
+
+    var y = this.num(2);
+    var m = this.num(1);
+    var d = this.num(1);
+    var dt = new Date();
+    dt.setYear(y);
+    dt.setMonth(m); 
+    dt.setDate(d);
+
+    return dt;
+}
+
 // deserialise mysql binary field
 reader.prototype.unpackBinary = function(type, unsigned)
 {
@@ -120,6 +194,24 @@ reader.prototype.unpackBinary = function(type, unsigned)
     case constants.types.MYSQL_TYPE_NEWDECIMAL:
         result = parseFloat(this.lcstring());
         break;
+/*
+  MYSQL_TYPE_TIMESTAMP: 7,
+  MYSQL_TYPE_LONGLONG: 8,
+  MYSQL_TYPE_INT24: 9,
+  MYSQL_TYPE_DATE: 10,
+  MYSQL_TYPE_TIME: 11,
+  MYSQL_TYPE_DATETIME: 12,
+  MYSQL_TYPE_YEAR: 13,
+  MYSQL_TYPE_NEWDATE: 14,
+
+*/
+    case constants.types.MYSQL_TYPE_DATE:
+         return this.unpackBinaryDate();
+    case constants.types.MYSQL_TYPE_TIME:
+         return this.unpackBinaryTime();
+    case constants.types.MYSQL_TYPE_DATETIME:
+    case constants.types.MYSQL_TYPE_TYMESTAMP:
+         return this.unpackBinaryDateTime();
     default:
         result = "_not_implemented_ " + constants.type_names[type] + " " + sys.inspect(this.data); //todo: throw exception here
     }
