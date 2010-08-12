@@ -232,6 +232,7 @@ function query(sql)
         {
             var ok = r.readOKpacket();
             this.insert_id = ok.insert_id;
+            this.affected_rows = ok.affected_rows;
             if (ok.field_count == 0)
             { 
                 return 'done';
@@ -393,6 +394,7 @@ function execute(sql, parameters)
         {
            var ok = r.readOKpacket();
            this.insert_id = ok.insert_id;
+           this.affected_rows = ok.affected_rows;
            if (this.ps.field_count == 0)
                return 'done';
            return 'fields';
