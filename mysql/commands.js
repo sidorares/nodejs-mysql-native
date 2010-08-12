@@ -231,6 +231,7 @@ function query(sql)
         rs_ok: function( r )
         {
             var ok = r.readOKpacket();
+            this.insert_id = ok.insert_id;
             if (ok.field_count == 0)
             { 
                 return 'done';
@@ -391,6 +392,7 @@ function execute(sql, parameters)
         execute_ok: function(r)
         {
            var ok = r.readOKpacket();
+           this.insert_id = ok.insert_id;
            if (this.ps.field_count == 0)
                return 'done';
            return 'fields';
