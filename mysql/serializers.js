@@ -332,7 +332,14 @@ reader.prototype.lcnum = function()
 {
    var b1 = this.data.charCodeAt(this.pos);
    this.pos++;
-   return b1;
+   if (b1 < 251)
+       return b1;
+   else if (b1 == 252)
+       return this.num(2);
+   else if (b1 == 253)
+       return this.num(3);
+   else if (b1 == 254)
+       return this.num(8);   
 }
 
 reader.prototype.readPacketHeader = function()
