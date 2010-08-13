@@ -184,7 +184,7 @@ function auth(db, user, password)
         {
             c.serverStatus.protocolVersion = r.bytes(1);
             c.serverStatus.serverVersion = r.zstring();
-            c.serverStatus.threadId = r.bytes(4);
+            c.serverStatus.threadId = r.num(4);
             var salt = r.bytes(8);
             // TODO: whats this? comment and add fields o sercerStatus
             r.bytes(1);
@@ -263,7 +263,8 @@ function query(sql)
             while (!r.eof())
             {
                 var field = this.fields[field_index];
-                var value = string2type(r.lcstring(), field.type); // todo: move to serialiser unpackString
+                var strValue = r.lcstring();
+                var value = string2type(strValue, field.type); // todo: move to serialiser unpackString
                 this.store_column(row, field, value)
                 field_index++;
             }
