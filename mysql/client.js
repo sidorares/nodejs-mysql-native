@@ -18,7 +18,7 @@
     {
         var host = host ? host : "locahost";
         var port = port ? port : 3306;
-        var connection = net.createConnection(3306, "localhost");
+        var connection = net.createConnection(port, host);
         connection.pscache = {};
         connection.setEncoding("binary");
         connection.setTimeout(0);
