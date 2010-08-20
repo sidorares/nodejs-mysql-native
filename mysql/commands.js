@@ -18,8 +18,8 @@ function xor(s1, s2)
 
 function parseTime(s)
 {
-    // TODO: add real parsing
-    return new Date();
+    // no parsing here with non-binary prtocol, return date as is
+    return s;
 }
 
 function parseString(s)
@@ -421,15 +421,17 @@ function execute(sql, parameters)
             var bitmap_byte;
             if (this.ps.field_count > 0)
                 bitmap_byte = r.num(1);
-            for (var f=0; f < this.ps.field_count; ++f)
+            var numfields = this.ps.field_count;
+            for (var f=0; f < numfields; ++f)
             {
                 null_bit_map.push( (bitmap_byte & bit) != 0);
-                if (!((bit<<=1) & 255))
+                if (!((bit<<=1) & 255) && f + 1 < numfields)
                 {
                     bit= 1;
                     bitmap_byte = r.num(1);
                 }    
             }
+
             var row = this.connection.row_as_hash ? {} : [];
             for (var f=0; f < this.ps.field_count; ++f)
             {
