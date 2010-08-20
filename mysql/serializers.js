@@ -97,6 +97,14 @@ function reader(data)
 
 }
 
+reader.prototype.dump = function()
+{
+    for (var i=this.pos; i < this.data.length; ++i)
+    {
+        sys.puts(this.data.charCodeAt(i));
+    } 
+}
+
 // libmysql sets all fields to zero when binary packet has zero length
 function zeroTime()
 {
