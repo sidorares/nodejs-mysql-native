@@ -121,7 +121,7 @@ function dump(d)
         }
 
         // proxy request to socket eventemitter
-        this.addListener = function()
+        this.on = this.addListener = function()
         {
             this.connection.addListener.apply(this.connection, arguments);
         }
