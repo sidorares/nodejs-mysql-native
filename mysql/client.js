@@ -16,7 +16,7 @@
 
     exports.createTCPClient = function(host, port)
     {
-        var host = host ? host : "locahost";
+        var host = host ? host : "localhost";
         var port = port ? port : 3306;
         var connection = net.createConnection(port, host);
         connection.pscache = {};
@@ -26,6 +26,17 @@
         return new socketClient(connection);
     }
 
+    exports.createUNIXClient = function(path)
+    {
+        var path = path ? path : "/var/run/mysqld/mysqld.sock";
+        var connection = net.createConnection(path);
+        connection.pscache = {};
+        connection.setEncoding("binary");
+        connection.setTimeout(0);
+
+        return new socketClient(connection);
+    }
+    
 function dump(d)
 {
    return;
