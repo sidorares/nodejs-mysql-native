@@ -32,6 +32,7 @@ mysql/client:
 
 createClient(socket) -  create client from duplex stream (TODO: add default path to local server socket)
 createTCPClient(host, port) - create tcp client, default host 127.0.0.1, port 3306
+createUNIXClient(path) - connect to unix domain socket, default is /var/run/mysqld/mysqld.sock
 
 client.auth
 client.query
