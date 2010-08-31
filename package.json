@@ -6,7 +6,7 @@
     , "email": "sidoarres@yandex.ru"
     }
   ]
-, "bugs" : { "web" : "http://github.com/sidorares/nodejs-mysql-native/issues" },
+, "bugs" : { "web" : "http://github.com/sidorares/nodejs-mysql-native/issues" }
 , "licenses" : [ { "type" : "MIT" } ]
 , "repositories" :
   [ { "type" : "git"
