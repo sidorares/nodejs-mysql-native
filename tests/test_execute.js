@@ -5,5 +5,7 @@ var db = require("mysql/client").createTCPClient();
 
 db.auth("test", "testuser", "testpass");
 db.prepare(process.argv[2]);
-db.execute(process.argv[2]).addListener('row', function(r) { sys.puts("binrow received:  " + sys.inspect(r)); } );
+var examplecmd = db.execute(process.argv[2], );
+examplecmd.addListener('row', function(r) { sys.puts("binrow received:  " + sys.inspect(r)); } );
+examplecmd.on('error', function(s) { sys.p(s); } );
 db.close();
