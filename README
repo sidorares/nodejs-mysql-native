@@ -2,6 +2,11 @@ Mysql client module for node.js, written in JavaScript. No other mysql runtime r
 
 simple example:
 
+install:
+npm install mysql-native
+
+
+example:
 var db = require("mysql-native").createTCPClient(); // localhost:3306 by default
 db.auto_prepare = true;
 function dump_rows(cmd)
