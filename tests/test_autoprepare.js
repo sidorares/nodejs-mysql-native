@@ -1,7 +1,7 @@
 #!/usr/local/bin/node
 
 var sys = require("sys");   
-var db = require("mysql/client").createTCPClient();
+var db = require("mysql-native").createTCPClient();
 
 db.auth("test", "testuser", "testpass");
 

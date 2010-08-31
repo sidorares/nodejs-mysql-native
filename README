@@ -2,7 +2,7 @@ Mysql client module for node.js, written in JavaScript. No other mysql runtime r
 
 simple example:
 
-var db = require("mysql/client").createTCPClient(); // localhost:3306 by default
+var db = require("mysql-native").createTCPClient(); // localhost:3306 by default
 db.auto_prepare = true;
 function dump_rows(cmd)
 {
@@ -27,8 +27,6 @@ highlights:
 
 
 == API:
-
-mysql/client:
 
 createClient(socket) -  create client from duplex stream (TODO: add default path to local server socket)
 createTCPClient(host, port) - create tcp client, default host 127.0.0.1, port 3306

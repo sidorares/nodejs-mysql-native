@@ -1,8 +1,7 @@
 #!/usr/local/bin/node
 
 var sys = require("sys");
-var client = require("mysql/client");
-var pool = require("mysql/pool").pool;
+var mysql = require("mysql-native");
 
 function dump_rows(cmd)
 {
@@ -11,13 +10,13 @@ function dump_rows(cmd)
 
 function createConnection()
 {
-   var db = client.createTCPClient(); 
+   var db = mysql.createTCPClient(); 
    db.auto_prepare = true;
    db.auth("test", "testuser", "testpass");
    return db;
 }
 
-var dbpool = new pool(createConnection, 3);
+var dbpool = new mysql.pool(createConnection, 3);
 
 function test_pool(p)
 {

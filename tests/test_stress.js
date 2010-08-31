@@ -2,7 +2,7 @@
 
 var sys = require("sys");   
 
-var createTCPClient = require("mysql/client").createTCPClient;
+var createTCPClient = require("mysql-native").createTCPClient;
 var numclients = process.argv[2];
 var clients = []
 

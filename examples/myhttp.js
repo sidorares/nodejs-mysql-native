@@ -3,20 +3,19 @@
 var sys = require("sys");
 var http = require("http");
 var url = require("url");
-var client = require("mysql/client");
-var pool = require("mysql/pool").pool;
+var mysql = require("mysql-native");
 
 process.addListener('uncaughtException', function(err) { sys.p(err); });
 
 function test_datasource()
 {
-   var db = client.createTCPClient(); 
+   var db = mysql.createTCPClient(); 
    db.auto_prepare = true;
    db.auth("test", "testuser", "testpass");
    return db;
 }
 
-var dbpool = new pool(test_datasource, 16);
+var dbpool = new mysql.pool(test_datasource, 16);
 dbpool.max_connections = 32;
 
 function dump_row(row, res)
