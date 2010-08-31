@@ -1,3 +1,23 @@
+{ "name" : "mysql-libmysqlclient"
+, "description" : "MySql protocol client for Node.Js"
+, "version" : "0.4.0"
+, "maintainers" :
+  [ { "name": "Andrey Sidorov"
+    , "email": "sidoarres@yandex.ru"
+    }
+  ]
+, "bugs" : { "web" : "http://github.com/sidorares/nodejs-mysql-native/issues" },
+, "licenses" : [ { "type" : "MIT" } ]
+, "repositories" :
+  [ { "type" : "git"
+    , "url" : "http://github.com/sidorares/nodejs-mysql-native"
+    }
+  ]
+, "main" : "./lib/mysql-native"
+, "engines" : { "node" : ">=0.2.0" },
+}
+
+
 { "name" : "mysql-native"
 , "version": "0.4.0"
 , "main" : "./lib/mysql-native"
