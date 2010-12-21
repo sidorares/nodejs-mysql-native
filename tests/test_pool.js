@@ -1,7 +1,7 @@
 #!/usr/local/bin/node
 
 var sys = require("sys");
-var mysql = require("mysql-native");
+var mysql = require("../lib/mysql-native");
 
 function dump_rows(cmd)
 {
