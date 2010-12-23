@@ -99,7 +99,7 @@ module.exports = {
       .auth("test", "testuser", "testpass")
 
     db.execute("select ?,?,?", [ 'test', null, 1]).addListener('result', function(res) {
-      console.log(res)
+      assert.length(res.rows, 1)
     }).addListener('end', function() {
       db.close();
     })

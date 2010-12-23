@@ -1,6 +1,6 @@
 var sys = require("sys")
   , assert = require('assert')
-  , mysql = require("../lib/mysql-native");
+  , mysql = require("../lib/mysql-native")
 
 function createConnection()
 {
