@@ -90,5 +90,18 @@ module.exports = {
       db.close();
     })
     
+  },
+  
+  'test execute result complete': function() {
+    var db = mysql.createTCPClient()
+    db.set('auto_prepare', true)
+      .set('row_as_hash', false)
+      .auth("test", "testuser", "testpass")
+
+    db.execute("select ?,?,?", [ 'test', null, 1]).addListener('result', function(res) {
+      console.log(res)
+    }).addListener('end', function() {
+      db.close();
+    })
   }
 }

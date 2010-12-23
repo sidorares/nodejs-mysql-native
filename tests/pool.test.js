@@ -1,5 +1,6 @@
-var sys = require("sys");
-var mysql = require("../lib/mysql-native");
+var sys = require("sys")
+  , assert = require('assert')
+  , mysql = require("../lib/mysql-native");
 
 function createConnection()
 {
@@ -22,6 +23,12 @@ function test_pool(pool)
 function dump_rows(cmd)
 {
    cmd.addListener('row', function(r) { sys.puts("row: " + sys.inspect(r)); } );
+}
+
+module.exports = {
+  'test connection pooling': function() {
+    assert.eql('test', 'test')
+  }
 }
 
 /*
