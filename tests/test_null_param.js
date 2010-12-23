@@ -11,11 +11,9 @@ function dump_rows(cmd)
 db.auth("test", "testuser", "testpass");
 
 var params = [null, 'test', null, 'test', 'test', null, 'test', 8, 'test', 'testagain',
-null, 'test', null, 'test', 'test', null, 'test', 8, 'test', 'testagain']
+null, 'test', null, 'test', 'test', null, 'test', 8, 'test', 'testagain', undefined]
 
-console.log(db.quote('sdfsdf kjh jhiuy"ssdfsdf"sefsw e sdfsdf "df sadf asdf"'))
-
-dump_rows(db.execute("select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", params));
+dump_rows(db.execute("select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", params));
 dump_rows(db.execute("select ?,?", ["hello", null]));
 dump_rows(db.execute("select ?,?,?,?,?,?", [null, 'hola', null, 'test', 'test2', 'another str']));
 dump_rows(db.execute("select ?,?,?,?,?,?", [null, 'hola', 'word', null, 'sdfsdf', '5']));
