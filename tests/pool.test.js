@@ -27,7 +27,7 @@ function dump_rows(cmd)
 
 module.exports = {
   'test connection pooling': function() {
-    assert.eql('test', 'test')
+    var dbpool = new mysql.pool(createConnection, 3);
   }
 }
 
