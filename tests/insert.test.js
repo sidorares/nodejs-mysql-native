@@ -27,9 +27,45 @@ module.exports = {
 
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string\nwith multiple\nlines")
     db.query(sql).addListener('result', function(r) {
-      assert.ok(r.insert_id > 0)
-    }).addListener('end', function() {
-      db.close()
+      
+      var insert_id = r.insert_id;
+
+      assert.ok(insert_id > 0)
+
+      sql = 'SELECT id,field FROM tbl WHERE id = ' + r.insert_id;
+      db.query(sql).addListener('result', function(r) {
+          var row = r.rows[0];
+          assert.equal( row.id, insert_id );
+          assert.equal( row.field, "this is' a test\" 'quoted' string\nwith multiple\nlines" );
+      }).addListener('end', function() {
+          db.close()
+      })
+    })
+    
+  },
+  
+  'test insert multibyte characters': function() {
+    
+    var db = mysql.createTCPClient()
+    db.set('auto_prepare', true)
+      .auth("test", "testuser", "testpass")
+
+    var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("本日は晴天なり")
+    db.query(sql).addListener('result', function(r) {
+    
+      var insert_id = r.insert_id;
+
+      assert.ok(insert_id > 0)
+
+      sql = 'SELECT id,field FROM tbl WHERE id = ' + r.insert_id;
+      db.query(sql).addListener('result', function(r) {
+          var row = r.rows[0];
+          assert.equal( row.id, insert_id );
+          assert.equal( row.field, "本日は晴天なり" );
+      }).addListener('end', function() {
+          db.close()
+      })
+    
     })
     
   }
