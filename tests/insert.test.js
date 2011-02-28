@@ -7,6 +7,7 @@ module.exports = {
   'test insert quoted': function() {
     
     var db = mysql.createTCPClient()
+    
     db.set('auto_prepare', true)
       .auth("test", "testuser", "testpass")
 
@@ -48,6 +49,7 @@ module.exports = {
     
     var db = mysql.createTCPClient()
     db.set('auto_prepare', true)
+      .set('charset', 'utf8') // to specify charset
       .auth("test", "testuser", "testpass")
 
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("本日は晴天なり")
