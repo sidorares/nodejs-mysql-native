@@ -61,31 +61,19 @@ Events:
 * `client.execute` also adds prepare command if there is no cached statement and client.auto_prepare set to true (TODO: add better api than client.auto_prepare flag)
 * `client.terminate` - close conection immediately
 
-## Connection pool
-
-`pool(createNewConnectionCallback, minConnections)` - create a new pool, spawn minConnections at start using createNewConnectionCallback. One should usually call auth command on a new connection before returning it. 
-pool.get( connectionAvailableCallback ) - calls connectionAvailableCallback when there is connection with queue length < pool.maxQueue.
-
-parameters:
-
-* pool.minConnections
-* pool.maxConnections
-* pool.maxQueue
-* pool.maxWaiters 
-
 # TODO
 
 * buffers 
 
 # LINKS
 
-Mysql protocol documentation:
+MySql protocol documentation:
  
 * <http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol>
 
 Other node.js mysql clients:
 
+* <http://github.com/felixge/node-mysql>
 * <http://github.com/masuidrive/node-mysql>
 * <http://github.com/Sannis/node-mysql-libmysqlclient>
 * <http://github.com/Guille/node.dbslayer.js>
-* <http://github.com/felixge/node-mysql>
