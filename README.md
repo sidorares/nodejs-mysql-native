@@ -9,7 +9,7 @@ Mysql client module for node.js, written in JavaScript. No other mysql runtime r
 db.auto_prepare = true;
 function dump_rows(cmd)
 {
-   cmd.addListener('row', function(r) { sys.puts("row: " + sys.inspect(r)); } );
+   cmd.addListener('row', function(r) { console.dir(r); } );
 }
 
 db.auth("test", "testuser", "testpass");
@@ -42,7 +42,7 @@ All commands fire 'end'() event at the end of command executing.
 Events:
     'authirized'(serverStatus) event. 
 
-* `query(sql)` - sumple query.
+* `query(sql)` - simple query.
 Events:
     'field'(field) - one for each field description
     'fields_eof'() - after last field
