@@ -2,7 +2,7 @@
 // original code (c) 
 
 var sys = require('sys');
-var webdb = require('mysql/websql');
+var webdb = require('mysql/wrappers/websql');
 
 var db = webdb.openDatabase('test');
 db.transaction(function (tx) {
