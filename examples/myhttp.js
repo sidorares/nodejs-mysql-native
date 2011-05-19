@@ -38,15 +38,43 @@ http.createServer(function (req, res) {
       return;
   }
 
-  var q = query.q;
-
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write("<html><body><table>\n<tr>");
-  conn.query(q)
-      .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
-      .on('fields_eof', function() { res.write("</tr>\n"); }) 
-      .on('row', function(r) { dump_row(r, res); }) 
-      .on('end', function() { res.end("</table></body></html>"); })
-      .on('error', function(e) { res.end(e.message); });
+  if (!query.q && !query.db)
+  {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write("<html><body><table>\n<tr>");
+      conn.query('show databases;')
+          .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
+          .on('fields_eof', function() { res.write("</tr>\n"); }) 
+          .on('row', function(r) { res.write('<tr><td><a href="/?db=' + r[0] + '">' + r[0] + '</a></td><tr>\n'); }) 
+          .on('end', function() { res.end("</table></body></html>"); })
+          .on('error', function(e) { res.end(e.message); });
+          
+  } else if (query.db)
+  {
+       conn.query('use ' + query.db).on('end', function()
+       {
+           var q = query.q;
+           var db = query.db;
+           if (!q)
+           {
+              res.write("<html><body><table>\n<tr>");
+              conn.query('show tables')
+                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
+                   .on('fields_eof', function() { res.write("</tr>\n"); }) 
+                   .on('row', function(r) { res.write('<tr><td><a href="/?db=' + db + '&q=select * from ' + r[0] + '">' + r[0] + '</a></td><tr>\n'); }) 
+                   .on('end', function() { res.end("</table></body></html>"); })
+                   .on('error', function(e) { res.end(e.message); });
+           } else {
+               res.writeHead(200, {'Content-Type': 'text/html'});
+               res.write("<html><body><table>\n<tr>");
+               conn.query(q)
+                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
+                   .on('fields_eof', function() { res.write("</tr>\n"); }) 
+                   .on('row', function(r) { dump_row(r, res); }) 
+                   .on('end', function() { res.end("</table></body></html>"); })
+                   .on('error', function(e) { res.end(e.message); });
+           }
+       });
+  }
      
 }).listen(8080, "127.0.0.1");
