@@ -2,7 +2,7 @@
 // original code (c) 
 
 var sys = require('sys');
-var webdb = require('mysql/wrappers/websql');
+var webdb = require('../lib/mysql-native/websql');
 
 var db = webdb.openDatabase('test');
 db.transaction(function (tx) {
