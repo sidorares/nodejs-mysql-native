@@ -1,22 +1,22 @@
 #!/usr/local/bin/node
 
-var sys = require("sys");
-var http = require("http");
-var url = require("url");
-var mysql = require("mysql-native");
+var http = require('http');
+var url = require('url');
+var mysql = require('../lib/mysql-native');
 
-process.addListener('uncaughtException', function(err) { sys.p(err); });
+process.on('uncaughtException', function(err) 
+{
+    console.error(err); 
+});
 
 function test_datasource()
 {
-   var db = mysql.createTCPClient(); 
+   var db = mysql.createTCPClient('127.0.0.1'); 
    db.auto_prepare = true;
-   db.auth("test", "testuser", "testpass");
+   db.auth('nodebench_test_db', 'root', '');
+   db.set('row_as_hash', false);
    return db;
 }
-
-var dbpool = new mysql.pool(test_datasource, 16);
-dbpool.max_connections = 32;
 
 function dump_row(row, res)
 {
@@ -28,6 +28,8 @@ function dump_row(row, res)
     res.write("</tr>\n");
 }
 
+var conn = test_datasource();
+
 http.createServer(function (req, res) {
   var query = url.parse(req.url, true).query;
   if (!query)
@@ -37,18 +39,14 @@ http.createServer(function (req, res) {
   }
 
   var q = query.q;
-  sys.p(q);
-  dbpool.get(
-      function(conn) 
-      {
 
-          res.writeHead(200, {'Content-Type': 'text/html'});
-          res.write("<html><body><table>\n<tr>");
-          conn.query(q)
-              .addListener('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
-              .addListener('fields_eof', function() { res.write("</tr>\n"); }) 
-              .addListener('row', function(r) { dump_row(r, res); }) 
-              .addListener('end', function() { res.write("</table></body></html>"); res.end(); });
-      }
-  ); 
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write("<html><body><table>\n<tr>");
+  conn.query(q)
+      .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
+      .on('fields_eof', function() { res.write("</tr>\n"); }) 
+      .on('row', function(r) { dump_row(r, res); }) 
+      .on('end', function() { res.end("</table></body></html>"); })
+      .on('error', function(e) { res.end(e.message); });
+     
 }).listen(8080, "127.0.0.1");
