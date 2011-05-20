@@ -2,34 +2,58 @@
 // https://github.com/felixge/node-mysql/blob/master/benchmark/node-mysql/insert.js
 // see https://github.com/felixge/node-mysql/blob/master/License
 
-var queries = require('./fixtures/queries');
+var config = require('./fixtures/queries');
 var client = require('../lib/mysql-native').createTCPClient('127.0.0.1'); // FIXME: localhost doesen't work on windows port
 // TODO: change auth signature to use struct as parameter. Too easy to misplace arguments
+
+var startUsage = process.memoryUsage();
+
+function dumpMem(n)
+{
+    var memusage = process.memoryUsage();
+    console.log(n + ' rss: ' + (memusage.rss - startUsage.rss) + '  vsize:'  + (memusage.vsize - startUsage.vsize) + 
+       ' heapTotal:' + (memusage.heapTotal - startUsage.heapTotal) + '  heapUsed:'  + (memusage.heapUsed - startUsage.heapUsed)
+   );
+}
+
 client.auth('', 'root', '')
 
-client.query(queries.createdb);
-client.query(queries.use);
-client.query(queries.drop);
-client.query(queries.create_table)
+client.query(config.createdb);
+client.query(config.use);
+//client.query(config.drop);
+client.query(config.create_table)
   .on('end',
      function() {
        console.log('starting benchmark');
-       var start = +new Date, inserts = 0, total = 10000;
-       function insertOne() {
-         client.query(queries.insert)
+       var start = +new Date, queries = 0, total = 100000;
+       var startTick = +new Date;
+
+       function queryOne() {
+         client.debug(queries);
+         client.execute(config.select, [queries])
+            .on('row', function(r) { console.log(r); })
             .on('end', function() {
-              inserts++;
-              if (inserts < total) {
-                insertOne(inserts);
+              //dumpMem(queries);
+              queries++;
+              if (queries < total) {
+                process.nextTick(function() { queryOne(queries) });
               } else {
                 var duration = (+new Date - start) / 1000,
-                    insertsPerSecond = inserts / duration;
+                    queriesPerSecond = queries / duration;
 
-                console.log('%d inserts / second', insertsPerSecond.toFixed(2));
+                console.log('%d queries / second', queriesPerSecond.toFixed(2));
                 console.log('%d ms', +new Date - start);
                 client.end();
               }
+              if (queries % 100 == 0)
+              {
+                var duration = (+new Date - startTick) / 1000,
+                    queriesPerSecond = 100 / duration;
+		startTick = +new Date;                
+
+                console.log('%d queries / second', queriesPerSecond.toFixed(2));
+              }
            });
      }
-     insertOne();
+     queryOne();
   });
