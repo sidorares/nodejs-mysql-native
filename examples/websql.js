@@ -1,7 +1,6 @@
 // websql example adapted from  http://html5demos.com/database-rollback
 // original code (c) 
 
-var sys = require('sys');
 var webdb = require('../lib/mysql-native/websql');
 
 var db = webdb.openDatabase('test');
@@ -12,9 +11,9 @@ db.transaction(function (tx) {
 
 db.transaction(function (tx) {
   tx.executeSql('SELECT * FROM foo', [], function (tx, results) {
-    sys.puts('found rows (should be 1): ' + sys.inspect(results)); 
+    console.log('found rows (should be 1): ' + sys.inspect(results)); 
   }, function (tx, err) {
-    sys.puts('select* failed: ' + err.message);
+    console.log('select* failed: ' + err.message);
   });
 });
 
@@ -24,7 +23,7 @@ db.transaction(function (tx) {
   tx.executeSql('INSERT INTO foo (id, text) VALUES (1, "foobar")', [], 
   function(tx, rs)
   {
-      sys.puts("insrted " + sys.inspect(rs));
+      console.log("insrted " + sys.inspect(rs));
   });
 }, function (err) {
   sys.puts('should be rolling back caused by: ' + err.message);
@@ -32,8 +31,8 @@ db.transaction(function (tx) {
 
 db.transaction(function (tx) {
   tx.executeSql('SELECT * FROM foo', [], function (tx, results) {
-    sys.puts('found rows (should be 1): ' + sys.inspect(results)); 
+    console.log('found rows (should be 1): ' + sys.inspect(results)); 
   }, function (tx, err) {
-    sys.puts('select* failed: ' + err.message);
+    console.log('select* failed: ' + err.message);
   });
 });
