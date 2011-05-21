@@ -13,5 +13,6 @@ module.exports = {
       'PRIMARY KEY (id));',
     insert: 'INSERT INTO ' + conf.table + ' SET title = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"',
     insert_param: 'INSERT INTO ' + conf.table + ' SET title = "?"',
-    select: 'select * from ' + conf.table + ' where id =? limit 1'
+    call: 'call productpricing()',
+    select: 'select * from ' + conf.table + ' where id =123 limit 1'
 }

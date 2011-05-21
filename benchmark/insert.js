@@ -20,17 +20,18 @@ client.auth('', 'root', '')
 
 client.query(config.createdb);
 client.query(config.use);
+client.verbose = true;
 //client.query(config.drop);
 client.query(config.create_table)
   .on('end',
      function() {
        console.log('starting benchmark');
-       var start = +new Date, queries = 0, total = 100000;
+       var start = +new Date, queries = 0, total = 1;
        var startTick = +new Date;
 
        function queryOne() {
          client.debug(queries);
-         client.execute(config.select, [queries])
+         client.query(config.call)
             .on('row', function(r) { console.log(r); })
             .on('end', function() {
               //dumpMem(queries);
@@ -54,6 +55,8 @@ client.query(config.create_table)
                 console.log('%d queries / second', queriesPerSecond.toFixed(2));
               }
            });
+        client.debug(queries + 'finished');
+ 
      }
      queryOne();
   });
