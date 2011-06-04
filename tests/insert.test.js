@@ -29,13 +29,12 @@ module.exports = {
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string\nwith multiple\nlines")
     db.query(sql).addListener('result', function(r) {
       
-      var insert_id = r.insert_id;
+      var insert_id = this.result.insert_id;
+      assert.ok(insert_id >= 0)
 
-      assert.ok(insert_id > 0)
-
-      sql = 'SELECT id,field FROM tbl WHERE id = ' + r.insert_id;
-      db.query(sql).addListener('result', function(r) {
-          var row = r.rows[0];
+      sql = 'SELECT id,field FROM tbl WHERE id = ' + insert_id;
+      db.query(sql).addListener('row', function(r) {
+          var row = r;
           assert.equal( row.id, insert_id );
           assert.equal( row.field, "this is' a test\" 'quoted' string\nwith multiple\nlines" );
       }).addListener('end', function() {
@@ -53,15 +52,15 @@ module.exports = {
       .auth("test", "testuser", "testpass")
 
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("本日は晴天なり")
-    db.query(sql).addListener('result', function(r) {
+    db.query(sql).addListener('end', function() {
     
-      var insert_id = r.insert_id;
+      var insert_id = this.result.insert_id;
 
-      assert.ok(insert_id > 0)
+      assert.ok(insert_id >= 0)
 
-      sql = 'SELECT id,field FROM tbl WHERE id = ' + r.insert_id;
-      db.query(sql).addListener('result', function(r) {
-          var row = r.rows[0];
+      sql = 'SELECT id,field FROM tbl WHERE id = ' + insert_id;
+
+      db.query(sql).addListener('row', function(row) {
           assert.equal( row.id, insert_id );
           assert.equal( row.field, "本日は晴天なり" );
       }).addListener('end', function() {
