@@ -44,7 +44,7 @@ All commands fire 'end'() event at the end of command executing.
 
 * `auth(user, pass, db)` - perform mysql connection handshake. Should be always a first command (TODO: add default user/pass if missing?).
 Events:
-    'authirized'(serverStatus) event. 
+    'authorized'(serverStatus) event. 
 
 * `query(sql)` - simple query.
 Events:
