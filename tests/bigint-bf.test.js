@@ -18,12 +18,7 @@ function runTest(params, setupSql, insertSql, insertParams, testSql, testParams,
         db.execute(insertSql, insertParams).on("end", function(){
             db.execute(testSql, testParams)
             .on("row", function(r){
-                console.log('row');
-                console.log(r);
                 rowTest(r);
-            })
-            .on('field', function(f) {
-                console.log(f);
             })
             .on("end", function(){
                 db.close();
@@ -43,7 +38,6 @@ exports = {
         var testSql = 'SELECT a FROM test_int';
 
         var testInt = 13109526528;
-        console.log('testInt = ' + testInt);
 
         runTest(params, setupSql, insertSql, [testInt], testSql, [], function(r){
             assert.equal(r[0],testInt);
