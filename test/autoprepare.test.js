@@ -36,6 +36,18 @@ module.exports = {
               fn();
         }, 200); 
             
+     },
+     ' #17 issue test ': function(fn)
+     {
+        var db = createConnection();
+        db.prepare('SELECT ?').on('prepared', function() {
+           db.execute('SELECT ?', [1]).on('row', function(row) {
+              assert.equal(1, row[0]);
+           }).on('end', function(cmd) {
+              db.close();
+              fn();
+           });
+        });
      }
 }
 //exports['test execute and autoprepare']();
