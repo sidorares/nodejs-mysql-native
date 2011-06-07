@@ -28,7 +28,7 @@ module.exports = {
 
         // since we test end event we cannot use it to close connection
         setTimeout(function() {
-           assert.equal(end_count, 1, 'end event expected to fireexactly one time');
+           assert.equal(end_count, 1, 'end event expected to fire exactly one time');
            var ps = db.connection.pscache[q];
            assert.equal(false, !ps, 'expecting cached statement');
            db.close(); 

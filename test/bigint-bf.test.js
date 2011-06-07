@@ -11,9 +11,8 @@ function createConnection()
     return db;
 }
 
-function runTest(params, setupSql, insertSql, insertParams, testSql, testParams, rowTest){
+function runTest(params, setupSql, insertSql, insertParams, testSql, testParams, rowTest, cb){
     var db = createConnection();
-    console.log(runTest.arguments);
     db.query(setupSql).on("end", function(){
         db.execute(insertSql, insertParams).on("end", function(){
             db.execute(testSql, testParams)
@@ -22,6 +21,8 @@ function runTest(params, setupSql, insertSql, insertParams, testSql, testParams,
             })
             .on("end", function(){
                 db.close();
+                if (cb)
+                    cb();
             });
         });
     });
@@ -41,7 +42,7 @@ module.exports = {
 
         runTest(params, setupSql, insertSql, [testInt], testSql, [], function(r){
             assert.equal(r[0],testInt);
-        });    
+        }, params);    
      },
 
     'test bit fields': function(params) {
@@ -60,7 +61,7 @@ module.exports = {
             } else {
                 assert.equal(r[0],bitField);
             }
-        });
+        }, params);
     }
 }
 
