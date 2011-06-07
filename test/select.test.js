@@ -72,7 +72,6 @@ module.exports = {
 
     // first insert a record that we know has a null value
     db.query('INSERT INTO tbl SET parent = 1').addListener('end', function() {
-     console.log('here'); 
       var insert_id = this.result.insert_id
 
       var sql = 'SELECT * FROM tbl WHERE id = ' + insert_id

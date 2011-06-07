@@ -1,6 +1,6 @@
 test:
-	@NODE_ENV=test expresso \
+	@NODE_ENV=test expresso -s \
 		$(TESTFLAGS) \
-		tests/*.test.js
+		test/*.test.js
 
 .PHONY: test
