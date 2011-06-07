@@ -27,7 +27,7 @@ function runTest(params, setupSql, insertSql, insertParams, testSql, testParams,
     });
 }
 
-exports = {
+module.exports = {
     'test large integers': function(params) {
         var setupSql = 'CREATE TEMPORARY TABLE test_int (\
             id bigint(11) unsigned NOT NULL AUTO_INCREMENT, \
