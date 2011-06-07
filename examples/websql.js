@@ -1,7 +1,7 @@
 // websql example adapted from  http://html5demos.com/database-rollback
 // original code (c) 
 
-var webdb = require('../lib/mysql-native/websql');
+var webdb = require('../lib/mysql-native/wrappers/websql');
 
 var db = webdb.openDatabase('test');
 db.transaction(function (tx) {
