@@ -1,0 +1,6 @@
+0.4.3
+    - prepared statements fixes (double 'end' event, prepared statements cache not updated)
+    - BIGINT parsing fix for binary row
+    - BITFIELD dupport
+    - date month index fix
+    - benchmarks

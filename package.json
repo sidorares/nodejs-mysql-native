@@ -1,9 +1,9 @@
 { "name" : "mysql-native"
 , "description" : "MySql protocol client for Node.Js"
-, "version" : "0.4.2"
+, "version" : "0.4.3"
 , "maintainers" :
   [ { "name": "Andrey Sidorov"
-    , "email": "sidoarres@yandex.ru"
+    , "email": "sidoares@yandex.ru"
     }
   ]
 , "bugs" : { "web" : "http://github.com/sidorares/nodejs-mysql-native/issues" }
