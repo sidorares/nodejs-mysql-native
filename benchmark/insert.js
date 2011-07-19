@@ -20,24 +20,27 @@ client.auth('', 'root', '')
 
 client.query(config.createdb);
 client.query(config.use);
-client.verbose = true;
+//client.verbose = true;
 //client.query(config.drop);
 client.query(config.create_table)
   .on('end',
      function() {
        console.log('starting benchmark');
-       var start = +new Date, queries = 0, total = 1;
+       var start = +new Date, queries = 0, total = 10000;
+       var rowcount = 0;
        var startTick = +new Date;
 
        function queryOne() {
-         client.debug(queries);
-         client.query(config.call)
-            .on('row', function(r) { console.log(r); })
+         client.query('select * from nodebench_test_table')
+            .on('row', function(r) { 
+              //console.log(r); 
+              rowcount++;
+            })
             .on('end', function() {
               //dumpMem(queries);
               queries++;
               if (queries < total) {
-                process.nextTick(function() { queryOne(queries) });
+                process.nextTick(function() { queryOne() });
               } else {
                 var duration = (+new Date - start) / 1000,
                     queriesPerSecond = queries / duration;
@@ -50,13 +53,14 @@ client.query(config.create_table)
               {
                 var duration = (+new Date - startTick) / 1000,
                     queriesPerSecond = 100 / duration;
-		startTick = +new Date;                
-
-                console.log('%d queries / second', queriesPerSecond.toFixed(2));
+		startTick = +new Date;
+                
+                console.log(rowcount);
+		var rps = rowcount/duration;
+                rowcount = 0;             
+                console.log('%d queries / second, %d rps', queriesPerSecond.toFixed(2), rps.toFixed(2));
               }
            });
-        client.debug(queries + 'finished');
- 
      }
      queryOne();
   });
