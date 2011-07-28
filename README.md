@@ -42,7 +42,7 @@ row: [ 2, 2, 3, "4", 5]
 ## Client Functions
 All commands fire 'end'() event at the end of command executing.
 
-* `auth(user, pass, db)` - perform mysql connection handshake. Should be always a first command (TODO: add default user/pass if missing?).
+* `auth(db, user, pass)` - perform mysql connection handshake. Should be always a first command (TODO: add default user/pass if missing?).
 Events:
     'authorized'(serverStatus) event. 
 
