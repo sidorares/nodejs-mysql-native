@@ -15,7 +15,7 @@ module.exports = {
   'test error on query': function(beforeExit) {
     var db = createClient();
     var testEndCalled = false
-    
+
     // attempt to run a bunk query
     db.query('SELECT * FROM').on('error', function(error) {
       assert.equal(error.num, 1064)
@@ -25,19 +25,19 @@ module.exports = {
       testEndCalled = true
       db.close()
     })
-    
+
     beforeExit(function() {
       assert.equal(testEndCalled, false)
     })
-    
+
   },
-  
+
   'test error on empty query': function(beforeExit) {
-    
+
     var db = createClient();
-  
+
     var testEndCalled = false
-    
+
     // attempt to run a bunk query
     db.query('').on('error', function(error) {
       assert.equal(error.num, 1065)
@@ -47,7 +47,7 @@ module.exports = {
       testEndCalled = true
       db.close()
     })
-    
+
     beforeExit(function() {
       assert.equal(testEndCalled, false)
     })
@@ -66,7 +66,7 @@ module.exports = {
       testEndCalled = true
       db.close()
     })
-    
+
     beforeExit(function() {
       assert.equal(testEndCalled, false)
     })

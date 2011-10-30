@@ -13,10 +13,10 @@ function createClient()
 }
 
 module.exports = {
-  
+
   'test insert quoted': function(cb) {
 
-    var db = createClient();    
+    var db = createClient();
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string");
     db.query(sql).on('row', function(r) {
 
@@ -25,15 +25,15 @@ module.exports = {
       if(cb)
         cb();
     })
-    
+
   },
-  
+
   'test insert quoted multiline': function(cb) {
-    
-    var db = createClient();    
+
+    var db = createClient();
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string\nwith multiple\nlines")
     db.query(sql).on('result', function(r) {
-      
+
       var insert_id = this.result.insert_id;
       assert.ok(insert_id >= 0)
 
@@ -48,15 +48,15 @@ module.exports = {
               cb();
       })
     })
-    
+
   },
-  
+
   'test insert multibyte characters': function(cb) {
-    
+
     var db = createClient();
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("本日は晴天なり");
     db.query(sql).on('end', function() {
-    
+
       var insert_id = this.result.insert_id;
 
       assert.ok(insert_id >= 0)
@@ -71,8 +71,8 @@ module.exports = {
           if(cb)
               cb();
       })
-    
+
     })
-    
+
   }
 }

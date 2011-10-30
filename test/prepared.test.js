@@ -7,7 +7,7 @@ var
 //
 //  parts of code from expresso
 //  TODO: move to wrapper
-// 
+//
 assert.eql = assert.deepEqual;
 
 assert.isNull = function(val, msg) {
@@ -36,10 +36,10 @@ function createClient()
 }
 
 module.exports = {
-  
+
   'test autoprepare': function(cb) {
-    
-    var db = createClient();   
+
+    var db = createClient();
     var sql = 'SELECT * FROM tbl WHERE id = ?'
     db.execute(sql, [1]).addListener('row', function(r) {
       assert.isDefined(r.id)
@@ -47,12 +47,12 @@ module.exports = {
       db.close();
       cb();
     })
-    
+
   },
-  
+
   'test prepare params': function(cb) {
 
-    var db = createClient();         
+    var db = createClient();
     var params = ['param', 'param2', 'param3']
     db.execute("select ?,?,?", params).addListener('row', function(r) {
       assert.includes(r, 'param')
@@ -62,10 +62,10 @@ module.exports = {
       cb();
     })
   },
-  
+
   'test prepare null params': function(cb) {
 
-    var db = createClient();        
+    var db = createClient();
     var params = [null, null, null]
 
     db.execute("select ?,?,?", params).addListener('row', function(r) {
@@ -75,12 +75,12 @@ module.exports = {
       db.close();
       cb();
     })
-    
+
   },
-  
+
   'test prepare undefined params': function(cb) {
 
-    var db = createClient();   
+    var db = createClient();
     var params = [undefined, undefined, undefined]
 
     db.execute("select ?,?,?", params).addListener('row', function(r) {
@@ -90,12 +90,12 @@ module.exports = {
       db.close();
       cb();
     })
-    
+
   },
-  
+
   'test prepare mixed params': function(cb) {
 
-    var db = createClient();         
+    var db = createClient();
     var params = [null, 'param2', undefined]
 
     db.execute("select ?,?,?", params).addListener('row', function(r) {
@@ -107,12 +107,12 @@ module.exports = {
       db.close();
       cb();
     })
-    
+
   },
-  
+
   'test execute result complete': function(cb) {
 
-    var db = createClient();   
+    var db = createClient();
     db.execute("select ?,?,?", [ 'test', null, 1]).addListener('result', function(res) {
       assert.length(res.rows, 1)
     }).addListener('end', function() {

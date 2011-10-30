@@ -11,7 +11,7 @@ var startUsage = process.memoryUsage();
 function dumpMem(n)
 {
     var memusage = process.memoryUsage();
-    console.log(n + ' rss: ' + (memusage.rss - startUsage.rss) + '  vsize:'  + (memusage.vsize - startUsage.vsize) + 
+    console.log(n + ' rss: ' + (memusage.rss - startUsage.rss) + '  vsize:'  + (memusage.vsize - startUsage.vsize) +
        ' heapTotal:' + (memusage.heapTotal - startUsage.heapTotal) + '  heapUsed:'  + (memusage.heapUsed - startUsage.heapUsed)
    );
 }
@@ -50,13 +50,13 @@ client.query(config.create_table)
               {
                 var duration = (+new Date - startTick) / 1000,
                     queriesPerSecond = 100 / duration;
-		startTick = +new Date;                
+		startTick = +new Date;
 
                 console.log('%d queries / second', queriesPerSecond.toFixed(2));
               }
            });
         client.debug(queries + 'finished');
- 
+
      }
      queryOne();
   });

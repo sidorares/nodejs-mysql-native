@@ -1,6 +1,6 @@
 #!/usr/local/bin/node
 
-var sys = require("sys");   
+var sys = require("sys");
 var mysql = require("../lib/mysql-native");
 
 var db = mysql.createTCPClient();
