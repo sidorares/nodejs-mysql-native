@@ -1,9 +1,9 @@
-var assert = require('assert'), 
+var assert = require('assert'),
 mysql = require('../lib/mysql-native');
 
-function createConnection()     
+function createConnection()
 {
-    var db = mysql.createTCPClient(); 
+    var db = mysql.createTCPClient();
     //db.verbose = true;
     db.set('auto_prepare', true)
       .set('row_as_hash', false)
@@ -42,7 +42,7 @@ module.exports = {
 
         runTest(params, setupSql, insertSql, [testInt], testSql, [], function(r){
             assert.equal(r[0],testInt);
-        }, params);    
+        }, params);
      },
 
     'test bit fields': function(params) {

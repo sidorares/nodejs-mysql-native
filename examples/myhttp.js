@@ -6,7 +6,7 @@ var mysql = require('../lib/mysql-native');
 
 function test_datasource()
 {
-   var db = mysql.createTCPClient('127.0.0.1'); 
+   var db = mysql.createTCPClient('127.0.0.1');
    db.auto_prepare = true;
    var auth = db.auth('', 'root');
    db.set('row_as_hash', false);
@@ -21,7 +21,7 @@ function dump_row(row, res, formatter)
     res.write('<tr>');
     for (var i=0; i < row.length; ++i)
     {
-        res.write('<td>' + formatter(row[i]) + '</td>'); 
+        res.write('<td>' + formatter(row[i]) + '</td>');
     }
     res.write('</tr>\n');
 }
@@ -31,9 +31,9 @@ function dump_query(cmd, res, formatter)
 
       res.write("<table>\n<tr>");
       cmd
-          .on('field', function(f) { res.write('<td>' + f.name + '</td>'); }) 
-          .on('fields_eof', function() { res.write('</tr>\n'); }) 
-          .on('row', function(r) { dump_row(r, res, formatter) }) 
+          .on('field', function(f) { res.write('<td>' + f.name + '</td>'); })
+          .on('fields_eof', function() { res.write('</tr>\n'); })
+          .on('row', function(r) { dump_row(r, res, formatter) })
           .on('end', function() { res.end('</table>'); })
 }
 
@@ -51,7 +51,7 @@ http.createServer(function (req, res) {
   {
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.write('<html><body>');
-      dump_query(conn.query('show databases'), res, 
+      dump_query(conn.query('show databases'), res,
           function(s) { return '<a href="/?db=' + s + '">' + s + '</a>'; }
      );
   } else if (query.db)
@@ -64,9 +64,9 @@ http.createServer(function (req, res) {
            {
               res.write("<html><body><table>\n<tr>");
               conn.query('show tables')
-                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
-                   .on('fields_eof', function() { res.write("</tr>\n"); }) 
-                   .on('row', function(r) { res.write('<tr><td><a href="/?db=' + db + '&q=select * from ' + r[0] + '">' + r[0] + '</a></td><tr>\n'); }) 
+                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); })
+                   .on('fields_eof', function() { res.write("</tr>\n"); })
+                   .on('row', function(r) { res.write('<tr><td><a href="/?db=' + db + '&q=select * from ' + r[0] + '">' + r[0] + '</a></td><tr>\n'); })
                    .on('end', function() { res.end("</table></body></html>"); })
                    .on('error', function(e) { res.end(e.message); });
            } else {
@@ -74,9 +74,9 @@ http.createServer(function (req, res) {
                res.writeHead(200, {'Content-Type': 'text/html'});
                res.write("<html><body><table>\n<tr>");
                conn.query(q)
-                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); }) 
-                   .on('fields_eof', function() { res.write("</tr>\n"); }) 
-                   .on('row', function(r) { dump_row(r, res); }) 
+                   .on('field', function(f) { res.write("<td>" + f.name + "</td>"); })
+                   .on('fields_eof', function() { res.write("</tr>\n"); })
+                   .on('row', function(r) { dump_row(r, res); })
                    .on('end', function() { res.end("</table></body></html>"); })
                    .on('error', function(e) { res.end(e.message); });
            }
@@ -85,5 +85,5 @@ http.createServer(function (req, res) {
        res.end('<h3>please select DB</h3>');
   }
   console.log(req);
-     
+
 }).listen(8080, "127.0.0.1");

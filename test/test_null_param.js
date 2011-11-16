@@ -28,6 +28,6 @@ db.query("create temporary table nullparams( \
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;").addListener('end', function() {
   dump_rows(db.execute("insert into nullparams (a, b, c) values (?,?,?)", [null, "word", null]))
   dump_rows(db.execute("select * from nullparams"))
-  db.close();  
+  db.close();
 })
 

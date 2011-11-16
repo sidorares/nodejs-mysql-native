@@ -30,12 +30,12 @@ function runModuleTests(m, cb)
               cb();
           }
       }
-      runOne();    
+      runOne();
 }
 
 function runTest(name, cb)
 {
-   try {   
+   try {
       var m = require(name);
       runModuleTests(m, cb);
    } catch(e) {
