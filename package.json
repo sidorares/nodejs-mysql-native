@@ -1,5 +1,7 @@
 { "name" : "mysql-native"
 , "description" : "MySql protocol client for Node.Js"
+, "keywords": ["mysql", "native", "sql", "database", "client", "pool"]
+, "homepage" : "http://github.com/sidorares/nodejs-mysql-native"
 , "version" : "0.4.3"
 , "maintainers" :
   [ { "name": "Andrey Sidorov"
