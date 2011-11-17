@@ -13,6 +13,15 @@ module.exports = {
     });  
   },
   
+  'test select * from test1 + callback': function(cb) {
+      var db = createClient();
+      db.query('select * from test1', function(err, res) {
+      console.log([err, res])
+      this.connection.socket.end();
+      cb();
+    });  
+  },
+
 
   'test benchmark select 1+1 (10000 queries)': function(cb) {
        var db = createClient();
