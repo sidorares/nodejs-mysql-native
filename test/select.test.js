@@ -19,14 +19,14 @@ module.exports = {
        var left = 10000;
        var start = +new Date;
        var prev1000 = start;
-       function bench(sql, cb)
+       function bench()
        {
            db.query('select 1', function(err, res) {
                left--;
                if (left % 1000 == 0)
                {
                    var curTime = +new Date;
-                   var last1000time = prev1000 - curTime;
+                   var last1000time = curTime - prev1000;
 		   prev1000 = curTime;
                    console.log( (1000000/last1000time) + ' req/sec' );
                }
