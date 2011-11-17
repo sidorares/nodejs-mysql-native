@@ -5,4 +5,4 @@ node_js:
   - 0.6
 
 before_script:
-  - "mysql -e 'create database if not exists test;'"
+  - "cat test/mysql_add_user.sql | mysql -uroot"
