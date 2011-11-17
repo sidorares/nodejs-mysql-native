@@ -4,11 +4,5 @@ node_js:
   - 0.5
   - 0.6
 
-mysql:
-  adapter: mysql2
-  database: test
-  username:
-  encoding: utf8
-
 before_script:
   - "mysql -e 'create database if not exists test;'"
