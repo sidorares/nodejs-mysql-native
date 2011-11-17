@@ -1,7 +1,7 @@
 // TODO: check if expresso installed, use wrapper if not
 var fs=require('fs');
 
-var files = fs.readdirSync('.').map(function(file){
+var files = fs.readdirSync(__dirname).map(function(file){
    if (file.match('.test.js'))
        return './' + file.substr(0,file.length - 3);
 }).filter(function(f) { return f; });
@@ -47,7 +47,7 @@ var test_num = -1;
 function runAll()
 {
     test_num++;
-    if (files.length > test_num+1)
+    if (files.length >= test_num+1)
     {
         runTest(files[test_num], runAll);
     };
