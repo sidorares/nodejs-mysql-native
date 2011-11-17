@@ -11,4 +11,4 @@ mysql:
   encoding: utf8
 
 before_script:
-  - "mysql -e 'create database test if not exist;'"
+  - "mysql -e 'create database if not exists test;'"
