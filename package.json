@@ -18,8 +18,8 @@
 , "main" : "./lib/mysql-native"
 , "engines" : { "node" : ">=0.2.0" }
 , "scripts" : {
-  pretest: "NODE_ENV=test node test/setup_db",
-  test: "expresso test/*"
+  "pretest": "NODE_ENV=test node test/setup_db",
+  "test": "expresso test/*"
 }
 
 }
