@@ -2,7 +2,7 @@
 , "description" : "MySql protocol client for Node.Js"
 , "keywords": ["mysql", "native", "sql", "database", "client", "pool"]
 , "homepage" : "http://github.com/sidorares/nodejs-mysql-native"
-, "version" : "0.4.3"
+, "version" : "0.5.0"
 , "maintainers" :
   [ { "name": "Andrey Sidorov"
     , "email": "sidoares@yandex.ru"
@@ -17,4 +17,9 @@
   ]
 , "main" : "./lib/mysql-native"
 , "engines" : { "node" : ">=0.2.0" }
+, "scripts" : {
+  pretest: "NODE_ENV=test node test/setup_db",
+  test: "expresso test/*"
+}
+
 }

@@ -7,7 +7,7 @@ function createConnection()
     //db.verbose = true;
     db.set('auto_prepare', true)
       .set('row_as_hash', false)
-      .auth("test", "testuser", "testpass");
+      .auth("test");
     return db;
 }
 

@@ -6,7 +6,7 @@ function createClient()
 {
     var db = mysql.createTCPClient();
     db.set('charset', 'utf8');
-    db.auth('test', 'testuser', 'testpass');
+    db.auth('test');
     // TODO: add create database test; use test
     db.query('create temporary table tbl(id int, field varchar(255))');
     return db;

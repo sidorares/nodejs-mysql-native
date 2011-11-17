@@ -5,7 +5,7 @@ var sys = require("sys")
 function createClient()
 {
     var db = mysql.createTCPClient();
-    db.auth('test', 'testuser', 'testpass');
+    db.auth('test');
     // TODO: add create database test; use test
     db.query('create temporary table tbl(id int)');
     return db;
