@@ -1,25 +1,10 @@
-var mysql = require('./client');
+var mysql = require('../lib/mysql-native');
 var db = mysql.createClient({
-    socket: '/var/run/mysqld/mysqld.sock',
-    user: 'root',
-    password: 'tetris'
+    port: 3306,
+    db: 'test'
 });
-//db.query('select sleep(10)', function(err, res) 
-//{
-//     console.log(res);
-     //this.client.end();
-//});
 
-//for (var ii=0; ii < 49; ii++)
-//    db.addConnection();
-
-
-//db.query('select sleep(10) as a1', function(err, res) 
-//{
-//     console.log(res);
-//});
-
-
+/*
 var http = require('http');
 
 http.createServer(function(req, res)
@@ -33,11 +18,11 @@ http.createServer(function(req, res)
         res.end();
     });
 }).listen(8081);
-
+*/
 
 var left = 10000;
 var start = +new Date;
-function bench()
+function bench(sql, cb)
 {
     db.query('select 1', function(err, res) {
         left--;
@@ -50,6 +35,7 @@ function bench()
             bench();
         else {
             console.log( 10000000/(+new Date() - start) );
+            db.query('select 1', function() { this.connection.socket.end(); });
         }
     });
 }

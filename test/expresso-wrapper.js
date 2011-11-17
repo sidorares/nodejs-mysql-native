@@ -1,5 +1,6 @@
 // TODO: check if expresso installed, use wrapper if not
 var fs=require('fs');
+var assert = require('assert');
 
 var files = fs.readdirSync(__dirname).map(function(file){
    if (file.match('.test.js'))
@@ -21,9 +22,10 @@ function runModuleTests(m, cb)
              console.log(" starting " + tests[subtest]);
              try {
                  m[tests[subtest]](runOne);
+
              } catch(err)
              {
-                 console.log(err.message);
+                 console.error(err.message);
                  runOne();
              }
           } else {
@@ -38,8 +40,9 @@ function runTest(name, cb)
    try {   
       var m = require(name);
       runModuleTests(m, cb);
-   } catch(e) {
+   } catch(e) {      
       console.log('Error from ' + name + ': ' + e.message);
+      throw e;
    }
 }
 
