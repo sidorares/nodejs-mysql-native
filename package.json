@@ -22,7 +22,7 @@
   "test": "expresso test/*"
 }
 , "devDependencies": {
-    "expresso": "0.9.2",
+    "expresso": "0.9.2"
 }
 
 }
