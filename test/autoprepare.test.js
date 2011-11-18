@@ -29,7 +29,7 @@ module.exports = {
      },
      ' #17 issue test ': function(fn)
      {
-        var db = createConnetion();        
+        var db = createConnection();        
         db.prepare('SELECT ?').on('prepared', function() {
            db.execute('SELECT ?', [1]).on('row', function(row) {
               assert.equal(1, row[0]);
