@@ -7,4 +7,4 @@ insert into test1 values(1);
 insert into test1 values(2);
 insert into test1 values(3);
 
-create table tbl(id int, field varchar);
+create table tbl(id int, field char(200));
