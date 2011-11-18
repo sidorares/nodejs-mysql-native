@@ -3,7 +3,7 @@ var createConnection = require('./common').createConnection;
 
 module.exports = {
   'test error on query': function(beforeExit) {
-    var db = createClient();
+    var db = createConnection();
     var testEndCalled = false
     
     // attempt to run a bunk query
@@ -24,7 +24,7 @@ module.exports = {
   
   'test error on empty query': function(beforeExit) {
     
-    var db = createClient();
+    var db = createConnection();
   
     var testEndCalled = false
     
@@ -45,7 +45,7 @@ module.exports = {
 
   'test error on execute': function(beforeExit) {
 
-    var db = createClient();
+    var db = createConnection();
     var testEndCalled = false
     // attempt to run a bunk query
     db.execute('SELECT * FROM tbl WHERE id = ?', []).on('error', function(error) {
