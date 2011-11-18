@@ -6,3 +6,5 @@ create table test1(f1 int);
 insert into test1 values(1);
 insert into test1 values(2);
 insert into test1 values(3);
+
+create table tbl(id int, field varchar);
