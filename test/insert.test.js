@@ -1,4 +1,4 @@
-var createConnection = require('./common');
+var assert = require('assert');
 var createConnection = require('./common').createConnection;
 
 module.exports = {
