@@ -1,15 +1,5 @@
-var sys = require("sys")
-  , assert = require('assert')
-  , mysql = require("../lib/mysql-native");
-
-function createClient()
-{
-    var db = mysql.createTCPClient();
-    db.auth('test', 'testuser', 'testpass');
-    // TODO: add create database test; use test
-    db.query('create temporary table tbl(id int)');
-    return db;
-}
+var assert = require('assert');
+var createConnection = require('./common').createConnection;
 
 module.exports = {
   'test error on query': function(beforeExit) {

@@ -1,15 +1,5 @@
-var assert = require('assert'), 
-mysql = require('../lib/mysql-native');
-
-function createConnection()     
-{
-    var db = mysql.createTCPClient(); 
-    //db.verbose = true;
-    db.set('auto_prepare', true)
-      .set('row_as_hash', false)
-      .auth("test", "testuser", "testpass");
-    return db;
-}
+var assert = require('assert');
+var createConnection = require('./common').createConnection;
 
 module.exports = {
     'test execute and autoprepare': function(fn) {
@@ -31,19 +21,19 @@ module.exports = {
            assert.equal(end_count, 1, 'end event expected to fire exactly one time');
            var ps = db.connection.pscache[q];
            assert.equal(false, !ps, 'expecting cached statement');
-           db.close(); 
+           db.close();
            if (fn)
               fn();
-        }, 200); 
+        }, 1200); 
             
      },
      ' #17 issue test ': function(fn)
      {
-        var db = createConnection();
+        var db = createConnetion();        
         db.prepare('SELECT ?').on('prepared', function() {
            db.execute('SELECT ?', [1]).on('row', function(row) {
               assert.equal(1, row[0]);
-           }).on('end', function(cmd) {
+           }).on('end', function() {
               db.close();
               fn();
            });

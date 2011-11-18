@@ -1,7 +1,8 @@
 // TODO: check if expresso installed, use wrapper if not
 var fs=require('fs');
+var assert = require('assert');
 
-var files = fs.readdirSync('.').map(function(file){
+var files = fs.readdirSync(__dirname).map(function(file){
    if (file.match('.test.js'))
        return './' + file.substr(0,file.length - 3);
 }).filter(function(f) { return f; });
@@ -21,9 +22,11 @@ function runModuleTests(m, cb)
              console.log(" starting " + tests[subtest]);
              try {
                  m[tests[subtest]](runOne);
+
              } catch(err)
              {
-                 console.log(err.message);
+                 throw(err);
+                 console.error(err.message);
                  runOne();
              }
           } else {
@@ -38,8 +41,9 @@ function runTest(name, cb)
    try {   
       var m = require(name);
       runModuleTests(m, cb);
-   } catch(e) {
+   } catch(e) {      
       console.log('Error from ' + name + ': ' + e.message);
+      throw e;
    }
 }
 
@@ -47,7 +51,7 @@ var test_num = -1;
 function runAll()
 {
     test_num++;
-    if (files.length > test_num+1)
+    if (files.length >= test_num+1)
     {
         runTest(files[test_num], runAll);
     };

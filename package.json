@@ -2,13 +2,13 @@
 , "description" : "MySql protocol client for Node.Js"
 , "keywords": ["mysql", "native", "sql", "database", "client", "pool"]
 , "homepage" : "http://github.com/sidorares/nodejs-mysql-native"
-, "version" : "0.4.3"
+, "version" : "0.4.4"
 , "maintainers" :
   [ { "name": "Andrey Sidorov"
     , "email": "sidoares@yandex.ru"
     }
   ]
-, "bugs" : { "web" : "http://github.com/sidorares/nodejs-mysql-native/issues" }
+, "bugs" : { "url" : "http://github.com/sidorares/nodejs-mysql-native/issues" }
 , "licenses" : [ { "type" : "MIT" } ]
 , "repositories" :
   [ { "type" : "git"
@@ -17,4 +17,9 @@
   ]
 , "main" : "./lib/mysql-native"
 , "engines" : { "node" : ">=0.2.0" }
+, "scripts" : {
+  "pretest": "NODE_ENV=test node test/setup_db",
+  "test": "node test/expresso-wrapper"
+}
+
 }

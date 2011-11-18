@@ -1,15 +1,5 @@
 var assert = require('assert'), 
-mysql = require('../lib/mysql-native');
-
-function createConnection()     
-{
-    var db = mysql.createTCPClient(); 
-    //db.verbose = true;
-    db.set('auto_prepare', true)
-      .set('row_as_hash', false)
-      .auth("test", "testuser", "testpass");
-    return db;
-}
+var createConnection = require('./common').createConnection;
 
 function runTest(params, setupSql, insertSql, insertParams, testSql, testParams, rowTest, cb){
     var db = createConnection();

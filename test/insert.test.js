@@ -1,22 +1,10 @@
-var sys = require('sys')
-  , assert = require('assert')
-  , mysql = require('../lib/mysql-native')
-
-function createClient()
-{
-    var db = mysql.createTCPClient();
-    db.set('charset', 'utf8');
-    db.auth('test', 'testuser', 'testpass');
-    // TODO: add create database test; use test
-    db.query('create temporary table tbl(id int, field varchar(255))');
-    return db;
-}
+var createConnection = require('./common');
+var createConnection = require('./common').createConnection;
 
 module.exports = {
   
   'test insert quoted': function(cb) {
-
-    var db = createClient();    
+    var db = createConnection();    
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string");
     db.query(sql).on('row', function(r) {
 
@@ -30,7 +18,7 @@ module.exports = {
   
   'test insert quoted multiline': function(cb) {
     
-    var db = createClient();    
+    var db = createConnection();    
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("this is' a test\" 'quoted' string\nwith multiple\nlines")
     db.query(sql).on('result', function(r) {
       
@@ -53,7 +41,7 @@ module.exports = {
   
   'test insert multibyte characters': function(cb) {
     
-    var db = createClient();
+    var db = createConnection();
     var sql = 'INSERT INTO tbl SET id = NULL, field = ' + db.quote("本日は晴天なり");
     db.query(sql).on('end', function() {
     
