@@ -1,4 +1,4 @@
-var assert = require('assert'), 
+var assert = require('assert');
 var createConnection = require('./common').createConnection;
 
 function runTest(params, setupSql, insertSql, insertParams, testSql, testParams, rowTest, cb){
