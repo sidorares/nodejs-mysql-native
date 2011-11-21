@@ -78,6 +78,5 @@ MySql protocol documentation:
 Other node.js mysql clients:
 
 * <http://github.com/felixge/node-mysql>
-* <http://github.com/masuidrive/node-mysql>
 * <http://github.com/Sannis/node-mysql-libmysqlclient>
 * <http://github.com/Guille/node.dbslayer.js>
