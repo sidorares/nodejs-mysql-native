@@ -3,14 +3,10 @@
 , "keywords": ["mysql", "native", "sql", "database", "client", "pool"]
 , "homepage" : "http://github.com/sidorares/nodejs-mysql-native"
 , "version" : "0.4.4"
-, "maintainers" :
-  [ { "name": "Andrey Sidorov"
-    , "email": "sidoares@yandex.ru"
-    }
-  ]
+, "author": "Andrey Sidorov <sidorares@yandex.ru>"
 , "bugs" : { "url" : "http://github.com/sidorares/nodejs-mysql-native/issues" }
-, "licenses" : [ { "type" : "MIT" } ]
-, "repositories" :
+,"license": "MIT"
+, "repository" :
   [ { "type" : "git"
     , "url" : "http://github.com/sidorares/nodejs-mysql-native"
     }
