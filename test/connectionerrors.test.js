@@ -2,6 +2,7 @@ var assert = require('assert');
 var createConnection = require('./common').createConnection;
 var net = require('net');
 
+/*
 module.exports = {
   'test connection closed during query': function(cb) {
        var forwardport = 3500;
@@ -39,6 +40,10 @@ module.exports = {
                     console.log('command 2 finished');
                });
     	   
-      }, 1500);
+      }, 1500);  
   }
 }
+
+
+
+*/
