@@ -1,6 +1,8 @@
 # About
 Mysql client module for node.js, written in JavaScript. No other mysql runtime required.
 
+[![Build Status](https://secure.travis-ci.org/sidorares/nodejs-mysql-native.png)](http://travis-ci.org/sidorares/nodejs-mysql-native)
+
 # Install
 `npm install mysql-native`
 
