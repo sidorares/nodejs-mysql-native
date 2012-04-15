@@ -61,6 +61,27 @@ module.exports = {
       })
     
     })
+  },
+  
+  'test insert multibyte using execute':function(cb) {
+        
+    var db = createConnection();
+    var parent = 43;
+    var field = "中文语言支持了";
+    db.execute('INSERT INTO tbl SET id = NULL,parent = ?,field = (?)',[parent , field]).on('end', function(){
+      var insert_id = this.result.insert_id;
+
+      assert.ok(insert_id >= 0)
+      
+      db.execute('SELECT id,parent,field FROM tbl WHERE id = ' + insert_id).on('row', function(row){
+          assert.equal( row.id, insert_id );
+          assert.equal( row.field, "中文语言支持了" );
+      }).on('end', function() {
+          db.close();
+          if(cb)
+              cb();
+      })
+    });
     
   }
 }
