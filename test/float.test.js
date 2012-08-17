@@ -19,20 +19,21 @@ function runTest(params, setupSql, insertSql, insertParams, testSql, testParams,
 }
 
 module.exports = {
-    '#68 test reading doubles in non-zero position': function(params) {
-        var setupSql = 'CREATE TEMPORARY TABLE test_dbl (\
+    '#69 test reading float in non-zero position': function(params) {
+        var setupSql = 'CREATE TEMPORARY TABLE test_flt (\
             id bigint(11) unsigned NOT NULL AUTO_INCREMENT, \
-            a double unsigned NULL, \
+            a float unsigned NULL, \
             PRIMARY KEY (id) \
             )';
-        var insertSql = 'INSERT INTO test_dbl (a) VALUES (?)';
-        var testSql = 'SELECT id, a FROM test_dbl';
+        var insertSql = 'INSERT INTO test_flt (a) VALUES (?)';
+        var testSql = 'SELECT id, a FROM test_flt';
 
-        var testDbl = 1.234;
+        var testFlt = 123.456;
 
-        runTest(params, setupSql, insertSql, [testDbl], testSql, [], function(r){
+        runTest(params, setupSql, insertSql, [testFlt], testSql, [], function(r){
             //console.log('r', r);
-            assert.equal(r[1],testDbl);
+            assert.ok(r[1] > testFlt - 0.00001);
+            assert.ok(r[1] < testFlt + 0.00001);
         }, params);    
      }
 }
