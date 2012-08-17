@@ -23,17 +23,21 @@ module.exports = {
         var setupSql = 'CREATE TEMPORARY TABLE test_flt (\
             id bigint(11) unsigned NOT NULL AUTO_INCREMENT, \
             a float unsigned NULL, \
+            b float unsigned NULL, \
             PRIMARY KEY (id) \
             )';
-        var insertSql = 'INSERT INTO test_flt (a) VALUES (?)';
-        var testSql = 'SELECT id, a FROM test_flt';
+        var insertSql = 'INSERT INTO test_flt (a, b) VALUES (?,?)';
+        var testSql = 'SELECT id, a, b FROM test_flt';
 
-        var testFlt = 123.456;
+        var testFltA = 123.456;
+        var testFltB = 987.654;
 
-        runTest(params, setupSql, insertSql, [testFlt], testSql, [], function(r){
+        runTest(params, setupSql, insertSql, [testFltA, testFltB], testSql, [], function(r){
             //console.log('r', r);
-            assert.ok(r[1] > testFlt - 0.00001);
-            assert.ok(r[1] < testFlt + 0.00001);
+            assert.ok(r[1] > testFltA - 0.00001);
+            assert.ok(r[1] < testFltA + 0.00001);
+            assert.ok(r[2] > testFltB - 0.00001);
+            assert.ok(r[2] < testFltB + 0.00001);
         }, params);    
      }
 }
