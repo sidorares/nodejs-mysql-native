@@ -75,7 +75,7 @@ Events:
 
 MySql protocol documentation:
  
-* <http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol>
+* <http://dev.mysql.com/doc/internals/en/client-server-protocol.html>
 
 Other node.js mysql clients:
 
