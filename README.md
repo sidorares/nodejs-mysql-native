@@ -1,4 +1,4 @@
-# Soon to be deprecated. If you are using it, please consider migrating to [node-mysql2](https://github.com/sidorares/node-mysql2)
+# Deprecated . If you are using it, please consider migrating to [node-mysql2](https://github.com/sidorares/node-mysql2)
 
 # About
 Mysql client module for node.js, written in JavaScript. No other mysql runtime required.
