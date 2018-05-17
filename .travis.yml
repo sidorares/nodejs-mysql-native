@@ -3,6 +3,7 @@ node_js:
   - 0.4
   - 0.6
   - 0.8
+  - 10
 
 before_script:
   - "cat test/mysql_add_user.sql | mysql -uroot"
